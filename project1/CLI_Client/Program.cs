@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Text.Json;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.AI;
 
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
@@ -61,7 +61,7 @@ try
             if (isFirstUpdate)
             {
                 threadId = chatUpdate.ConversationId;
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
                 Console.ResetColor();
                 isFirstUpdate = false;
@@ -72,7 +72,7 @@ try
             {
                 if (content is TextContent textContent)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.Write(textContent.Text);
                     Console.ResetColor();
                 }
@@ -84,20 +84,24 @@ try
                 }
                 else if (content is FunctionCallContent functionCallContent)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\n[Function Call: {functionCallContent.Name} with arguments {functionCallContent.Arguments}]");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    
+                    var argsJson = JsonSerializer.Serialize(
+                        functionCallContent.Arguments,
+                        new JsonSerializerOptions { WriteIndented = true }
+                    );
+                    Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
                     Console.ResetColor();
                 }
                 else if (content is FunctionResultContent functionResultContent)
                 {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
                     Console.ResetColor();
                 }
             }
         }
-
-        Console.ForegroundColor = ConsoleColor.DarkGreen;
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
         Console.ResetColor();
     }
