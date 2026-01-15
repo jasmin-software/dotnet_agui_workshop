@@ -18,17 +18,11 @@ var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .Build();
-            
-
-Console.WriteLine($"Base path: {AppContext.BaseDirectory}");
-Console.WriteLine($"GetCurrentDirectory path: {Directory.GetCurrentDirectory()}");
-Console.WriteLine($"Token loaded: {config["GitHub:Token"] is not null}");
 
 string? apiKey = config["GitHub:Token"];
 string? endpoint = config["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
 string? deploymentName = config["GitHub:Model"] ?? "openai/gpt-4o-mini";
 
-    
 // Create AI agent
 AIAgent agent = new AzureOpenAIClient(
     new Uri(endpoint),
