@@ -1,0 +1,57 @@
+@page "/ai"
+@using Blazor_Client.Services
+@inject IAiService AiService
+
+<h3>AI Chat</h3>
+
+<div class="ai-chat">
+    <div class="messages" style="max-height:40vh;overflow:auto;margin-bottom:1rem;">
+        @foreach (var m in messages)
+        {
+            <div class="message">
+                <strong>@m.Sender:</strong> @m.Text
+            </div>
+        }
+    </div>
+
+    <div class="input-group">
+        <textarea class="form-control" @bind="newMessage" rows="3"></textarea>
+        <button class="btn btn-primary" @onclick="SendMessage" disabled="@isSending">Send</button>
+    </div>
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="text-danger mt-2">@error</div>
+    }
+</div>
+
+@code {
+    private List<ChatMessage> messages = new();
+    private string newMessage = string.Empty;
+    private bool isSending = false;
+    private string error = string.Empty;
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(newMessage)) return;
+        var userText = newMessage.Trim();
+        messages.Add(new ChatMessage("You", userText));
+        newMessage = string.Empty;
+        isSending = true;
+        error = string.Empty;
+        try
+        {
+            var reply = await AiService.SendMessageAsync(userText);
+            messages.Add(new ChatMessage("AI", reply));
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            isSending = false;
+        }
+    }
+
+    private record ChatMessage(string Sender, string Text);
+}
