@@ -1,47 +1,61 @@
 @page "/ai"
+@rendermode InteractiveServer
 @using Blazor_Client.Services
-@inject IAiService AiService
+@inject IAgUiAgentService AgentService
 
-<h3>AI Chat</h3>
+<h3>Simple AG-UI Chat</h3>
 
-<div class="ai-chat">
-    <div class="messages" style="max-height:40vh;overflow:auto;margin-bottom:1rem;">
-        @foreach (var m in messages)
-        {
-            <div class="message">
-                <strong>@m.Sender:</strong> @m.Text
-            </div>
-        }
-    </div>
+<div style="max-width:600px">
+    <textarea class="form-control"
+              rows="3"
+              placeholder="Type a message..."
+              @bind="userMessage"
+              @bind:event="oninput">
+    </textarea>
 
-    <div class="input-group">
-        <textarea class="form-control" @bind="newMessage" rows="3"></textarea>
-        <button class="btn btn-primary" @onclick="SendMessage" disabled="@isSending">Send</button>
-    </div>
+    <button class="btn btn-primary mt-2"
+            @onclick="SendMessage"
+            disabled="@isSending">
+        Send
+    </button>
+
     @if (!string.IsNullOrEmpty(error))
     {
         <div class="text-danger mt-2">@error</div>
     }
+
+    @if (!string.IsNullOrEmpty(response))
+    {
+        <div class="alert alert-secondary mt-3">
+            <strong>AI:</strong> @response
+        </div>
+    }
 </div>
 
 @code {
-    private List<ChatMessage> messages = new();
-    private string newMessage = string.Empty;
+    private string userMessage = "";
+    private string response = "";
+    private string? error;
     private bool isSending = false;
-    private string error = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AgentService.InitializeAsync();
+    }
 
     private async Task SendMessage()
     {
-        if (string.IsNullOrWhiteSpace(newMessage)) return;
-        var userText = newMessage.Trim();
-        messages.Add(new ChatMessage("You", userText));
-        newMessage = string.Empty;
-        isSending = true;
-        error = string.Empty;
+        if (string.IsNullOrWhiteSpace(userMessage))
+            return;
+
         try
         {
-            var reply = await AiService.SendMessageAsync(userText);
-            messages.Add(new ChatMessage("AI", reply));
+            isSending = true;
+            error = null;
+            response = "";
+
+            response = await AgentService.SendMessageAsync(userMessage);
+            userMessage = "";
         }
         catch (Exception ex)
         {
@@ -52,6 +66,4 @@
             isSending = false;
         }
     }
-
-    private record ChatMessage(string Sender, string Text);
 }
