@@ -1,11 +1,12 @@
 @page "/ai"
 @rendermode InteractiveServer
 @using Blazor_Client.Services
+@using Markdig
 @inject IAgUiAgentService AgentService
 
 <h3>Simple AG-UI Chat</h3>
 
-<div style="max-width:600px">
+<div class="ai-chat">
     <textarea class="form-control"
               rows="3"
               placeholder="Type a message..."
@@ -27,7 +28,8 @@
     @if (!string.IsNullOrEmpty(response))
     {
         <div class="alert alert-secondary mt-3">
-            <strong>AI:</strong> @response
+            <strong>AI:</strong> 
+            <div>@renderedResponse</div>
         </div>
     }
 </div>
@@ -37,6 +39,8 @@
     private string response = "";
     private string? error;
     private bool isSending = false;
+    private MarkupString renderedResponse =>
+        new MarkupString(Markdown.ToHtml(response ?? ""));
 
     protected override async Task OnInitializedAsync()
     {
