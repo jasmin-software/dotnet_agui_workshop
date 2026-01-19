@@ -11,7 +11,7 @@ builder.Services.AddScoped(sp => {
     };
     return http;
 });
-builder.Services.AddScoped<IAgUiAgentService, AgUiAgentService>();
+builder.Services.AddScoped<IAGUIAgentService, AGUIAgentService>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

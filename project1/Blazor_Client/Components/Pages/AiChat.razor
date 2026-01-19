@@ -2,56 +2,58 @@
 @rendermode InteractiveServer
 @using Blazor_Client.Services
 @using Markdig
-@inject IAgUiAgentService AgentService
+@inject IAGUIAgentService AgentService
 
-<h3>Simple AG-UI Chat</h3>
+<div style="background-color:@(Colour ?? "white"); min-height:100vh;">
+    <h3>Simple AG-UI Chat</h3>
 
-<div class="ai-chat" style="background-color: @(Colour ?? "white")">
-    <textarea class="form-control"
-              rows="3"
-              placeholder="Type a message..."
-              @bind="input"
-              @bind:event="oninput">
-    </textarea>
+    <div class="ai-chat">
+        <textarea class="form-control"
+                rows="3"
+                placeholder="Type a message..."
+                @bind="input"
+                @bind:event="oninput">
+        </textarea>
 
-    <button class="btn btn-primary mt-2"
-            @onclick="CallAgent"
-            disabled="@isBusy">
-        Send
-    </button>
+        <button class="btn btn-primary mt-2"
+                @onclick="CallAgent"
+                disabled="@isBusy">
+            Send
+        </button>
 
-    @if (!string.IsNullOrEmpty(error))
-    {
-        <div class="text-danger mt-2">@error</div>
-    }
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="text-danger mt-2">@error</div>
+        }
 
-    
-    @if (!string.IsNullOrEmpty(response) || !string.IsNullOrEmpty(streamedResponse))
-    {
-        <div class="row mt-3">
-            
-            @if (!string.IsNullOrEmpty(streamedResponse))
-            {
-                <div class="col-md-6">
-                    <div class="alert alert-secondary h-100">
-                        <strong>AI (streamed):</strong>
-                        <div>@renderedStreamedResponse</div>
-                        
+        
+        @if (!string.IsNullOrEmpty(response) || !string.IsNullOrEmpty(streamedResponse))
+        {
+            <div class="row mt-3">
+                
+                @if (!string.IsNullOrEmpty(streamedResponse))
+                {
+                    <div class="col-md-6">
+                        <div class="alert alert-secondary h-100">
+                            <strong>AI (streamed):</strong>
+                            <div>@renderedStreamedResponse</div>
+                            
+                        </div>
                     </div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(response))
-            {
-                <div class="col-md-6">
-                    <div class="alert alert-secondary h-100">
-                        <strong>AI (non-streamed):</strong>
-                        <div>@renderedResponse</div>
+                }
+                @if (!string.IsNullOrEmpty(response))
+                {
+                    <div class="col-md-6">
+                        <div class="alert alert-secondary h-100">
+                            <strong>AI (non-streamed):</strong>
+                            <div>@renderedResponse</div>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
-    }
+                }
+            </div>
+        }
 
+    </div>
 </div>
 
 @code {
@@ -111,16 +113,7 @@
         await foreach (var chunk in AgentService.StreamMessageAsync(message)) 
         {
             streamedResponse += chunk;
-            @* await Task.Delay(60); *@
-            await InvokeAsync(StateHasChanged);
-        }
-    }
-
-    private async Task ChangeBackgroundColor(string requestedColour)
-    {
-        if (!string.IsNullOrWhiteSpace(requestedColour))
-        {
-            await AgentService.RunAsync($"Change background color to {requestedColour}");
+            await Task.Delay(50);
             await InvokeAsync(StateHasChanged);
         }
     }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.AI;
 
 namespace Blazor_Client.Services;
 
-public interface IAgUiAgentService
+public interface IAGUIAgentService
 {
     AIAgent Agent {get;}
 
@@ -18,7 +18,7 @@ public interface IAgUiAgentService
 
 }
 
-public class AgUiAgentService : IAgUiAgentService
+public class AGUIAgentService : IAGUIAgentService
 {
     private readonly HttpClient _httpClient;
     private AGUIChatClient? _chatClient;    
@@ -26,17 +26,22 @@ public class AgUiAgentService : IAgUiAgentService
 
     public AIAgent Agent => _agent ?? throw new InvalidOperationException("Agent not initialized. Call InitializeAsync() first.");
 
-    public AgUiAgentService(HttpClient httpClient)
+    public AGUIAgentService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    // Define a frontend function tool
-    [Description("Change the backgound color of the web page to the specified color.")]
-    static void ChangeBackgroundColor(string color)
+    [Description("Change the background color of the chat interface to the specified color.")]
+    private static Task ChangeBackgroundColor(string color)
     {
         AiChat.Colour = color;
+        return Task.CompletedTask;
     }
+    // Example 2 is to show toast notifications
+
+    AITool[] tools = [
+        AIFunctionFactory.Create(ChangeBackgroundColor)
+    ];
 
     public Task InitializeAsync()
     {
@@ -44,7 +49,7 @@ public class AgUiAgentService : IAgUiAgentService
         _agent = _chatClient.CreateAIAgent(
             name: "agui-client",
             description: "AG-UI Client Agent",
-            tools: [AIFunctionFactory.Create(ChangeBackgroundColor)]);
+            tools: tools);
         return Task.CompletedTask;
     }
 
