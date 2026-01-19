@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using System.Net.Http.Json;
+using Blazor_Client.Components.Pages;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
@@ -12,6 +14,7 @@ public interface IAgUiAgentService
     Task InitializeAsync();
     IAsyncEnumerable<string> StreamMessageAsync(string message);
     Task<string> SendMessageAsync(string message);
+    Task RunAsync(string message);
 
 }
 
@@ -28,13 +31,29 @@ public class AgUiAgentService : IAgUiAgentService
         _httpClient = httpClient;
     }
 
+    // Define a frontend function tool
+    [Description("Change the backgound color of the web page to the specified color.")]
+    static void ChangeBackgroundColor(string color)
+    {
+        AiChat.Colour = color;
+    }
+
     public Task InitializeAsync()
     {
         _chatClient = new AGUIChatClient(_httpClient, _httpClient.BaseAddress!.ToString());
         _agent = _chatClient.CreateAIAgent(
             name: "agui-client",
-            description: "AG-UI Client Agent");
+            description: "AG-UI Client Agent",
+            tools: [AIFunctionFactory.Create(ChangeBackgroundColor)]);
         return Task.CompletedTask;
+    }
+
+    public async Task RunAsync(string message)
+    {
+        if (_agent == null)
+            throw new InvalidOperationException("Agent not initialized.");
+
+        await _agent.RunAsync(message);
     }
 
     public async IAsyncEnumerable<string> StreamMessageAsync(string message)

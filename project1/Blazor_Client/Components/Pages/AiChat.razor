@@ -6,7 +6,7 @@
 
 <h3>Simple AG-UI Chat</h3>
 
-<div class="ai-chat">
+<div class="ai-chat" style="background-color: @(Colour ?? "white")">
     <textarea class="form-control"
               rows="3"
               placeholder="Type a message..."
@@ -55,6 +55,7 @@
 </div>
 
 @code {
+    public static string? Colour { get; set; }
     private string input = "";
     private bool isBusy = false;
     private string? error;
@@ -110,7 +111,16 @@
         await foreach (var chunk in AgentService.StreamMessageAsync(message)) 
         {
             streamedResponse += chunk;
-            await Task.Delay(60);
+            @* await Task.Delay(60); *@
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task ChangeBackgroundColor(string requestedColour)
+    {
+        if (!string.IsNullOrWhiteSpace(requestedColour))
+        {
+            await AgentService.RunAsync($"Change background color to {requestedColour}");
             await InvokeAsync(StateHasChanged);
         }
     }
