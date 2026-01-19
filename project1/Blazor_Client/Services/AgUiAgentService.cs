@@ -10,7 +10,7 @@ public interface IAgUiAgentService
     AIAgent Agent {get;}
 
     Task InitializeAsync();
-    IAsyncEnumerable<AgentRunResponseUpdate> StreamMessageAsync(string message);
+    IAsyncEnumerable<string> StreamMessageAsync(string message);
     Task<string> SendMessageAsync(string message);
 
 }
@@ -37,12 +37,19 @@ public class AgUiAgentService : IAgUiAgentService
         return Task.CompletedTask;
     }
 
-    public IAsyncEnumerable<AgentRunResponseUpdate> StreamMessageAsync(string message)
+    public async IAsyncEnumerable<string> StreamMessageAsync(string message)
     {
         if (_agent == null)
             throw new InvalidOperationException("Agent not initialized.");
 
-        return _agent.RunStreamingAsync(message);
+        await foreach (var update in _agent.RunStreamingAsync(message))
+        {
+            foreach (var content in update.Contents)
+            {
+                if (content is TextContent textContent)
+                    yield return textContent.Text;
+            }
+        }
     }
 
     public async Task<string> SendMessageAsync(string message)

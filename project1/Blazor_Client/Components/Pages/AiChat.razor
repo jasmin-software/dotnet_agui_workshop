@@ -10,13 +10,13 @@
     <textarea class="form-control"
               rows="3"
               placeholder="Type a message..."
-              @bind="userMessage"
+              @bind="input"
               @bind:event="oninput">
     </textarea>
 
     <button class="btn btn-primary mt-2"
-            @onclick="SendMessage"
-            disabled="@isSending">
+            @onclick="CallAgent"
+            disabled="@isBusy">
         Send
     </button>
 
@@ -25,49 +25,94 @@
         <div class="text-danger mt-2">@error</div>
     }
 
-    @if (!string.IsNullOrEmpty(response))
+    
+    @if (!string.IsNullOrEmpty(response) || !string.IsNullOrEmpty(streamedResponse))
     {
-        <div class="alert alert-secondary mt-3">
-            <strong>AI:</strong> 
-            <div>@renderedResponse</div>
+        <div class="row mt-3">
+            
+            @if (!string.IsNullOrEmpty(streamedResponse))
+            {
+                <div class="col-md-6">
+                    <div class="alert alert-secondary h-100">
+                        <strong>AI (streamed):</strong>
+                        <div>@renderedStreamedResponse</div>
+                        
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(response))
+            {
+                <div class="col-md-6">
+                    <div class="alert alert-secondary h-100">
+                        <strong>AI (non-streamed):</strong>
+                        <div>@renderedResponse</div>
+                    </div>
+                </div>
+            }
         </div>
     }
+
 </div>
 
 @code {
-    private string userMessage = "";
-    private string response = "";
+    private string input = "";
+    private bool isBusy = false;
     private string? error;
-    private bool isSending = false;
-    private MarkupString renderedResponse =>
-        new MarkupString(Markdown.ToHtml(response ?? ""));
+
+    // (Regular) message
+    private string response = "";
+    private MarkupString renderedResponse;
+        
+    // Streaming message 
+    private string streamedResponse = "";
+    private MarkupString renderedStreamedResponse => new MarkupString(Markdown.ToHtml(streamedResponse ?? ""));
 
     protected override async Task OnInitializedAsync()
     {
         await AgentService.InitializeAsync();
     }
 
-    private async Task SendMessage()
-    {
-        if (string.IsNullOrWhiteSpace(userMessage))
+    private async Task CallAgent() {
+        if (string.IsNullOrWhiteSpace(input) || isBusy)
             return;
 
-        try
-        {
-            isSending = true;
-            error = null;
-            response = "";
+        isBusy = true;
+        error = null;
+        var message = input;
 
-            response = await AgentService.SendMessageAsync(userMessage);
-            userMessage = "";
+        try 
+        {
+            var sendTask = SendMessage(message);
+            var streamTask = StreamMessage(message);
+            await Task.WhenAll(sendTask, streamTask);
         }
-        catch (Exception ex)
+        catch (Exception ex) 
         {
             error = ex.Message;
         }
-        finally
+        finally 
         {
-            isSending = false;
+            isBusy = false;
+            input = "";
+        }
+    }
+
+    private async Task SendMessage(string message)
+    {
+        response = "";
+        response = await AgentService.SendMessageAsync(message);
+        renderedResponse = new MarkupString(Markdown.ToHtml(response));
+    }
+
+    private async Task StreamMessage(string message)
+    {
+        streamedResponse = "";
+        await foreach (var chunk in AgentService.StreamMessageAsync(message)) 
+        {
+            streamedResponse += chunk;
+            await Task.Delay(60);
+            await InvokeAsync(StateHasChanged);
         }
     }
 }
+
