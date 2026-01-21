@@ -89,8 +89,23 @@ try
                 if (content is FunctionApprovalRequestContent approvalRequestContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}]");
+
+                    if (message.ToLower() is "approved")
+                    {
+                        var approvalMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(true)]);
+                        Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+                    }
+                    else if (message.ToLower() is "denied")
+                    {
+                        var denialMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(false)]);
+                        Console.WriteLine(await agent.RunAsync(denialMessage, thread));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}]");
+                    }
                     Console.ResetColor();
+
                 }
                 if (content is FunctionApprovalResponseContent approvalResponseContent)
                 {
