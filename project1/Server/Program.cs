@@ -1,12 +1,12 @@
 ﻿
-using Azure;
-using Azure.AI.OpenAI;
+using System.ClientModel;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenAI;
 using OpenAI.Chat;
 using Server.Tools;
 
@@ -31,9 +31,12 @@ AITool[] tools =
 ];
 
 // Create AI agent
-AIAgent agent = new AzureOpenAIClient(
-    new Uri(endpoint),
-    new AzureKeyCredential(apiKey!))
+AIAgent agent = new OpenAIClient(
+    new ApiKeyCredential(apiKey!),
+    new OpenAIClientOptions()
+    {
+        Endpoint = new Uri(endpoint)
+    })
     .GetChatClient(deploymentName)
     .CreateAIAgent(
         instructions: "You're a wise motivational speaker.",
