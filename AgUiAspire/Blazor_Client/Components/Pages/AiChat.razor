@@ -1,0 +1,121 @@
+@page "/ai"
+@rendermode InteractiveServer
+@using Blazor_Client.Services
+@using Markdig
+@inject IAGUIAgentService AgentService
+
+<div style="background-color:@(Colour ?? "white"); min-height:100vh;">
+    <h3>Simple AG-UI Chat</h3>
+
+    <div class="ai-chat">
+        <textarea class="form-control"
+                rows="3"
+                placeholder="Type a message..."
+                @bind="input"
+                @bind:event="oninput">
+        </textarea>
+
+        <button class="btn btn-primary mt-2"
+                @onclick="CallAgent"
+                disabled="@isBusy">
+            Send
+        </button>
+
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="text-danger mt-2">@error</div>
+        }
+
+        
+        @if (!string.IsNullOrEmpty(response) || !string.IsNullOrEmpty(streamedResponse))
+        {
+            <div class="row mt-3">
+                
+                @if (!string.IsNullOrEmpty(streamedResponse))
+                {
+                    <div class="col-md-6">
+                        <div class="alert alert-secondary h-100">
+                            <strong>AI (streamed):</strong>
+                            <div>@renderedStreamedResponse</div>
+                            
+                        </div>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(response))
+                {
+                    <div class="col-md-6">
+                        <div class="alert alert-secondary h-100">
+                            <strong>AI (non-streamed):</strong>
+                            <div>@renderedResponse</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
+
+@code {
+    public static string? Colour { get; set; }
+    private string input = "";
+    private bool isBusy = false;
+    private string? error;
+
+    // (Regular) message
+    private string response = "";
+    private MarkupString renderedResponse;
+        
+    // Streaming message 
+    private string streamedResponse = "";
+    private MarkupString renderedStreamedResponse => new MarkupString(Markdown.ToHtml(streamedResponse ?? ""));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AgentService.InitializeAsync();
+    }
+
+    private async Task CallAgent() {
+        if (string.IsNullOrWhiteSpace(input) || isBusy)
+            return;
+
+        isBusy = true;
+        error = null;
+        var message = input;
+
+        try 
+        {
+            var sendTask = SendMessage(message);
+            var streamTask = StreamMessage(message);
+            await Task.WhenAll(sendTask, streamTask);
+        }
+        catch (Exception ex) 
+        {
+            error = ex.Message;
+        }
+        finally 
+        {
+            isBusy = false;
+            input = "";
+        }
+    }
+
+    private async Task SendMessage(string message)
+    {
+        response = "";
+        response = await AgentService.SendMessageAsync(message);
+        renderedResponse = new MarkupString(Markdown.ToHtml(response));
+    }
+
+    private async Task StreamMessage(string message)
+    {
+        streamedResponse = "";
+        await foreach (var chunk in AgentService.StreamMessageAsync(message)) 
+        {
+            streamedResponse += chunk;
+            await Task.Delay(50);
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
+
