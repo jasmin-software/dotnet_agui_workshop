@@ -77,11 +77,13 @@ try
                     if (input == "approve" || input == "a" || input == "yes" || input == "y")
                     {
                         var approvalMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(true)]);
+                        Console.ForegroundColor = ConsoleColor.Green;
                         await HandleFunctionApprovalResponse(agent, approvalMessage);
                     }
                     else if (input == "deny" || input == "d" || input == "no" || input == "n")
                     {
                         var denialMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(false)]);
+                        Console.ForegroundColor = ConsoleColor.Red;
                         await HandleFunctionApprovalResponse(agent, denialMessage);
                     }
                     else
@@ -108,8 +110,6 @@ catch (Exception ex)
 async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 {
     var updates = agent.RunStreamingAsync(message);
-    var response = message.Contents.First() as FunctionApprovalResponseContent;
-    Console.ForegroundColor = response!.Approved ? ConsoleColor.Green : ConsoleColor.Red;
 
     await foreach (AgentRunResponseUpdate update in updates)
     {
