@@ -6,7 +6,6 @@ using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
 
-string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
 string serverUrl = "http://localhost:8888";
 
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
@@ -65,23 +64,10 @@ try
         messages.Add(new ChatMessage(ChatRole.User, message));
 
         // Stream the response
-        bool isFirstUpdate = true;
-        string? threadId = null;
-
         var updates = agent.RunStreamingAsync(messages, thread);
         await foreach (AgentRunResponseUpdate update in updates)
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
-
-            // First update indicates run started
-            // if (isFirstUpdate)
-            // {
-            //     threadId = chatUpdate.ConversationId;
-            //     Console.ForegroundColor = ConsoleColor.DarkGray;
-            //     Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
-            //     Console.ResetColor();
-            //     isFirstUpdate = false;
-            // }
 
             // Display streaming text content
             foreach (AIContent content in update.Contents)
@@ -95,8 +81,7 @@ try
                     if (message.ToLower() is "approved")
                     {
                         var approvalMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(true)]);
-                        // Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
-                        messages.Add(approvalMessage);
+                        Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
                     }
                     else if (message.ToLower() is "denied")
                     {
@@ -114,56 +99,21 @@ try
                     Console.ResetColor();
 
                 }
-                if (content is TextReasoningContent reasoningContent)
+                if (content is TextContent textContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"\n[Reasoning: {reasoningContent.Text}]");
+                    Console.WriteLine(textContent.Text);
                     Console.ResetColor();
                 }
-                if (content is DataContent)
-                
                 if (content is FunctionApprovalResponseContent approvalResponseContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine($"\n[Function Approval Response: {(approvalResponseContent.Approved ? "Approved" : "Denied")}]");
                     Console.ResetColor();
                 }
-
-                if (content is TextContent textContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write(textContent.Text);
-                    Console.ResetColor();
-                }
-                if (content is ErrorContent errorContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n[Error: {errorContent.Message}]");
-                    Console.ResetColor();
-                }
-                if (content is FunctionCallContent functionCallContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    
-                    var argsJson = JsonSerializer.Serialize(
-                        functionCallContent.Arguments,
-                        new JsonSerializerOptions { WriteIndented = true }
-                    );
-                    Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
-                    Console.ResetColor();
-                }
-                if (content is FunctionResultContent functionResultContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
-                    Console.ResetColor();
-                }
 #pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             }
         }
-        // Console.ForegroundColor = ConsoleColor.DarkGray;
-        // Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
-        // Console.ResetColor();
     }
 }
 catch (Exception ex)
