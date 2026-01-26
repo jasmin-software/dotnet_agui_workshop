@@ -7,6 +7,7 @@ using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
 
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
+string serverUrl = "http://localhost:8888";
 
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
@@ -33,13 +34,13 @@ AIFunction approvalRequiredSendEmailFunction = new ApprovalRequiredAIFunction(se
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
-    description: "AG-UI Client Agent", tools: [approvalRequiredSendEmailFunction]);
+    description: "AG-UI Client Agent",
+    tools: [approvalRequiredSendEmailFunction]);
 
 AgentThread thread = agent.GetNewThread();
 List<ChatMessage> messages =
 [
-    new(ChatRole.System, "You are a helpful assistant."),
-    new(ChatRole.User, "hello"),
+    new(ChatRole.System, "You are a helpful assistant.")
 ];
 
 try
@@ -73,14 +74,14 @@ try
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
             // First update indicates run started
-            if (isFirstUpdate)
-            {
-                threadId = chatUpdate.ConversationId;
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
-                Console.ResetColor();
-                isFirstUpdate = false;
-            }
+            // if (isFirstUpdate)
+            // {
+            //     threadId = chatUpdate.ConversationId;
+            //     Console.ForegroundColor = ConsoleColor.DarkGray;
+            //     Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
+            //     Console.ResetColor();
+            //     isFirstUpdate = false;
+            // }
 
             // Display streaming text content
             foreach (AIContent content in update.Contents)
@@ -89,11 +90,13 @@ try
                 if (content is FunctionApprovalRequestContent approvalRequestContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
-
+                    // print the arguments of the function call
+                    
                     if (message.ToLower() is "approved")
                     {
                         var approvalMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(true)]);
-                        Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+                        // Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+                        messages.Add(approvalMessage);
                     }
                     else if (message.ToLower() is "denied")
                     {
@@ -102,11 +105,23 @@ try
                     }
                     else
                     {
-                        Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}]");
+                        var argsJson = JsonSerializer.Serialize(
+                            approvalRequestContent.FunctionCall.Arguments,
+                            new JsonSerializerOptions { WriteIndented = true }
+                        );
+                        Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}\nArguments:\n{argsJson}");
                     }
                     Console.ResetColor();
 
                 }
+                if (content is TextReasoningContent reasoningContent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"\n[Reasoning: {reasoningContent.Text}]");
+                    Console.ResetColor();
+                }
+                if (content is DataContent)
+                
                 if (content is FunctionApprovalResponseContent approvalResponseContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -120,13 +135,13 @@ try
                     Console.Write(textContent.Text);
                     Console.ResetColor();
                 }
-                else if (content is ErrorContent errorContent)
+                if (content is ErrorContent errorContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"\n[Error: {errorContent.Message}]");
                     Console.ResetColor();
                 }
-                else if (content is FunctionCallContent functionCallContent)
+                if (content is FunctionCallContent functionCallContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     
@@ -137,7 +152,7 @@ try
                     Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
                     Console.ResetColor();
                 }
-                else if (content is FunctionResultContent functionResultContent)
+                if (content is FunctionResultContent functionResultContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
@@ -146,9 +161,9 @@ try
 #pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             }
         }
-        Console.ForegroundColor = ConsoleColor.DarkGray;
-        Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
-        Console.ResetColor();
+        // Console.ForegroundColor = ConsoleColor.DarkGray;
+        // Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
+        // Console.ResetColor();
     }
 }
 catch (Exception ex)
