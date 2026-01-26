@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.Json;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
@@ -25,16 +23,14 @@ static string SendEmail(
     return $"Email sent to {to} with subject '{subject}'";
 }
 
-AIFunction sendEmailFunction = AIFunctionFactory.Create(SendEmail);
-#pragma warning disable MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-AIFunction approvalRequiredSendEmailFunction = new ApprovalRequiredAIFunction(sendEmailFunction);
-#pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+AIFunction sendEmailTool = AIFunctionFactory.Create(SendEmail);
+AIFunction approvalRequiredSendEmailTool = new ApprovalRequiredAIFunction(sendEmailTool);
 
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
-    tools: [approvalRequiredSendEmailFunction]);
+    tools: [approvalRequiredSendEmailTool]);
 
 AgentThread thread = agent.GetNewThread();
 List<ChatMessage> messages =
@@ -42,12 +38,17 @@ List<ChatMessage> messages =
     new(ChatRole.System, "You are a helpful assistant.")
 ];
 
+bool awaitingApproval = false;
+string regularPrompt = "\n> ";
+string approvalPrompt = "\nApprove execution? (approve/deny): ";
+Console.Write("\nEnter your message or :q to quit.\n");
+
 try
 {
     while (true)
     {
         // Get user input
-        Console.Write("\nUser (:q or quit to exit): ");
+        Console.Write(awaitingApproval ? approvalPrompt : regularPrompt);
         string? message = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(message))
@@ -56,7 +57,7 @@ try
             continue;
         }
 
-        if (message is ":q" or "quit")
+        if (message.ToLowerInvariant() is ":q" or "quit")
         {
             break;
         }
@@ -67,51 +68,34 @@ try
         var updates = agent.RunStreamingAsync(messages, thread);
         await foreach (AgentRunResponseUpdate update in updates)
         {
-            ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
-
             // Display streaming text content
             foreach (AIContent content in update.Contents)
             {
-#pragma warning disable MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-                if (content is FunctionApprovalRequestContent approvalRequestContent)
+                if (content is FunctionApprovalRequestContent request)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    // print the arguments of the function call
-                    
-                    if (message.ToLower() is "approved")
+                    var input = message.Trim().ToLowerInvariant();
+                    if (input == "approve" || input == "a" || input == "yes" || input == "y")
                     {
-                        var approvalMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(true)]);
-                        Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+                        var approvalMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(true)]);
+                        await HandleFunctionApprovalResponse(agent, approvalMessage);
                     }
-                    else if (message.ToLower() is "denied")
+                    else if (input == "deny" || input == "d" || input == "no" || input == "n")
                     {
-                        var denialMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(false)]);
-                        Console.WriteLine(await agent.RunAsync(denialMessage, thread));
+                        var denialMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(false)]);
+                        await HandleFunctionApprovalResponse(agent, denialMessage);
                     }
                     else
                     {
                         var argsJson = JsonSerializer.Serialize(
-                            approvalRequestContent.FunctionCall.Arguments,
+                            request.FunctionCall.Arguments,
                             new JsonSerializerOptions { WriteIndented = true }
                         );
-                        Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}\nArguments:\n{argsJson}");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine($"\nPlease confirm that you'd like to send the email with the following details:\n{argsJson}");
+                        awaitingApproval = true;
                     }
                     Console.ResetColor();
-
                 }
-                if (content is TextContent textContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine(textContent.Text);
-                    Console.ResetColor();
-                }
-                if (content is FunctionApprovalResponseContent approvalResponseContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"\n[Function Approval Response: {(approvalResponseContent.Approved ? "Approved" : "Denied")}]");
-                    Console.ResetColor();
-                }
-#pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             }
         }
     }
@@ -119,4 +103,23 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"\nAn error occurred: {ex.Message}");
+}
+
+async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
+{
+    var updates = agent.RunStreamingAsync(message);
+    var response = message.Contents.First() as FunctionApprovalResponseContent;
+    Console.ForegroundColor = response!.Approved ? ConsoleColor.Green : ConsoleColor.Red;
+
+    await foreach (AgentRunResponseUpdate update in updates)
+    {
+        foreach (AIContent content in update.Contents)
+        {
+            if (content is TextContent textContent)
+            {
+                Console.Write(textContent.Text);
+            }
+        }
+    }
+    awaitingApproval = false;
 }
