@@ -5,7 +5,7 @@ using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
 
-string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
+string serverUrl = "http://localhost:8888";
 
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
@@ -23,8 +23,7 @@ AIAgent agent = chatClient.CreateAIAgent(
 AgentThread thread = agent.GetNewThread();
 List<ChatMessage> messages =
 [
-    new(ChatRole.System, "You are a helpful assistant."),
-    new(ChatRole.User, "hello"),
+    new(ChatRole.System, "You are a helpful assistant.")
 ];
 
 try
