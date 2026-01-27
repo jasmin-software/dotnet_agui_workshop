@@ -8,7 +8,7 @@ This is the Aspire enabled version of the tutorial. It orchestrates only the _Se
 4. Use Aspire
 
 <details><summary>Without Aspire Tool</summary>
-Change directory into the _AgUiAspire.AppHost_ folder and load Aspire dashboard with these terminal window commands:
+Change directory into the `AgUiAspire.AppHost` folder and load Aspire dashboard with these terminal window commands:
 
 ```bash
 cd AgUiAspire.AppHost
@@ -17,10 +17,14 @@ dotnet watch
 </details>
 
 <details><summary>Using Aspire Tool</summary>
-Install Aspire from https://aspire.dev/get-started/install-cli/. Then, Run the following command at a terminal window inside the _AgUiAspire_ folder.
-   ```bash
-   aspire run
-   ```
+
+Install Aspire from https://aspire.dev/get-started/install-cli/. 
+
+Then, run the following command at a terminal window inside the `AgUiAspire` folder.
+
+```bash
+aspire run
+```
 </details>
 
 5. The `Dashboard URL` will be displayed in the terminal once the projects are running.
