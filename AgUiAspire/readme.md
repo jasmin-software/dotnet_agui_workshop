@@ -2,13 +2,27 @@ This is the Aspire enabled version of the tutorial. It orchestrates only the _Se
 
 **Aspire Enabled Blazor WebAssembly Tutorial**
 1. Install .NET 10.0 SDK from https://dotnet.microsoft.com/en-us/
-2. Install Aspire from https://aspire.dev/get-started/install-cli/
-3. Clone this repository
-4. In the _AgUiAspire/Server_ folder copy file named `appsettings.json.dev` to `appsettings.json` and update the _GitHub:Token_ value with your personal access token.
-5. Run the following command at a terminal window inside the _AgUiAspire_ folder.
+2. Clone this repository
+3. In the _AgUiAspire/Server_ folder copy file named `appsettings.json.dev` to `appsettings.json` and update the _GitHub:Token_ value with your personal access token.
+
+4. Use Aspire
+
+<details><summary>Without Aspire Tool</summary>
+Change directory into the _AgUiAspire.AppHost_ folder and load Aspire dashboard with these terminal window commands:
+
+```bash
+cd AgUiAspire.AppHost
+dotnet watch
+````
+</details>
+
+<details><summary>Using Aspire Tool</summary>
+Install Aspire from https://aspire.dev/get-started/install-cli/. Then, Run the following command at a terminal window inside the _AgUiAspire_ folder.
    ```bash
    aspire run
    ```
-6. The `Dashboard URL` will be displayed in the terminal once the projects are running.
-7. Point your browser to the dashboard URL to access the Aspire Dashboard.
-8. Click on the Blazor_Client service to try the blazor client application.
+</details>
+
+5. The `Dashboard URL` will be displayed in the terminal once the projects are running.
+6. Point your browser to the dashboard URL to access the Aspire Dashboard.
+7. Click on the Blazor_Client service to try the blazor client application.
