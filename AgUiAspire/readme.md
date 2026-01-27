@@ -8,6 +8,7 @@ This is the Aspire enabled version of the tutorial. It orchestrates only the _Se
 4. Use Aspire
 
 <details><summary>Without Aspire Tool</summary>
+
 Change directory into the `AgUiAspire.AppHost` folder and load Aspire dashboard with these terminal window commands:
 
 ```bash
