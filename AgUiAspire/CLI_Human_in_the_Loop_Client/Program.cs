@@ -1,9 +1,13 @@
-﻿using Microsoft.Agents.AI;
+﻿// Copyright (c) Microsoft. All rights reserved.
+
+using System.ComponentModel;
+using System.Text.Json;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
-using System.Text.Json;
 
-string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:5000";
+string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
+
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
 // Create the AG-UI client agent
@@ -12,15 +16,30 @@ using HttpClient httpClient = new()
     Timeout = TimeSpan.FromSeconds(60)
 };
 
+[Description("Send an email to a recipient.")]
+static string SendEmail(
+    [Description("The email address to send to")] string to,
+    [Description("The subject line")] string subject,
+    [Description("The email body")] string body)
+{
+    return $"Email sent to {to} with subject '{subject}'";
+}
+
+AIFunction sendEmailFunction = AIFunctionFactory.Create(SendEmail);
+#pragma warning disable MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+AIFunction approvalRequiredSendEmailFunction = new ApprovalRequiredAIFunction(sendEmailFunction);
+#pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
-    description: "AG-UI Client Agent");
+    description: "AG-UI Client Agent", tools: [approvalRequiredSendEmailFunction]);
 
 AgentThread thread = agent.GetNewThread();
 List<ChatMessage> messages =
 [
-    new(ChatRole.System, "You are a helpful assistant.")
+    new(ChatRole.System, "You are a helpful assistant."),
+    new(ChatRole.User, "hello"),
 ];
 
 try
@@ -66,6 +85,35 @@ try
             // Display streaming text content
             foreach (AIContent content in update.Contents)
             {
+#pragma warning disable MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+                if (content is FunctionApprovalRequestContent approvalRequestContent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+
+                    if (message.ToLower() is "approved")
+                    {
+                        var approvalMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(true)]);
+                        Console.WriteLine(await agent.RunAsync(approvalMessage, thread));
+                    }
+                    else if (message.ToLower() is "denied")
+                    {
+                        var denialMessage = new ChatMessage(ChatRole.User, [approvalRequestContent.CreateResponse(false)]);
+                        Console.WriteLine(await agent.RunAsync(denialMessage, thread));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n[Function Approval Requested: {approvalRequestContent.FunctionCall.Name}]");
+                    }
+                    Console.ResetColor();
+
+                }
+                if (content is FunctionApprovalResponseContent approvalResponseContent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"\n[Function Approval Response: {(approvalResponseContent.Approved ? "Approved" : "Denied")}]");
+                    Console.ResetColor();
+                }
+
                 if (content is TextContent textContent)
                 {
                     Console.ForegroundColor = ConsoleColor.Blue;
@@ -95,6 +143,7 @@ try
                     Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
                     Console.ResetColor();
                 }
+#pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             }
         }
         Console.ForegroundColor = ConsoleColor.DarkGray;
