@@ -104,7 +104,7 @@ AIAgent agent = new OpenAIClient(
         tools: tools);
 ```
 
-Finally, replace the endpoint statement ``_``app.MapGet("/", () => "Hello World!");`` with this AG-UI endpoint:
+Finally, replace the endpoint statement ``app.MapGet("/", () => "Hello World!");`` with this AG-UI endpoint:
 
 ```C#
 // Map the AG-UI agent endpoint
