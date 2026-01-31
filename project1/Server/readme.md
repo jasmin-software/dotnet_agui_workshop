@@ -111,4 +111,4 @@ Finally, replace the endpoint statement ``app.MapGet("/", () => "Hello World!");
 app.MapAGUI("/", agent);
 ```
 
-This is it, we now have an AG-UI server that we will later connect to from a variety of clients.
+This is it, folks. We now have an AG-UI server that we will later connect to from a variety of clients.
