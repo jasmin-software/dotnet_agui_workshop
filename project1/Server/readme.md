@@ -1,6 +1,6 @@
 # Step 1: Creating an AG-UI Server
 
-From a working directory inside of a terminal window, crete a web app named _ServerAGUI_ with the following command:
+From a working directory inside of a terminal window, create a web app named _ServerAGUI_ with the following command:
 
 ```bash
 mkdir AGUI
@@ -8,6 +8,9 @@ cd AGUI
 dotnet new sln
 dotnet new web -n ServerAGUI
 dotnet sln add ./ServerAGUI/ServerAGUI.csproj
+cd ServerAGUI
+mkdir Tools
+cd ..
 dotnet new gitignore
 ```
 
@@ -19,7 +22,6 @@ Install the necessary packages for the server:
 
 ```bash 
 cd ServerAGUI
-mkdir Tools
 dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
 dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
@@ -44,11 +46,15 @@ Add the following JSON to _appsettings.Development.json_ file:
 
 Edit the _.gitignore_ file in the _AGUI_ folder and add to it _appsettings.Development.json_ so that your secrets do not find their way into source control by mistake.
 
-We will add a simple weather tool that returns a static weather report. Of course, you can replace the tool with one that connects to a weather API and returns read weather related forecast. 
+We will add a simple weather tool that returns a static weather report. Of course, you can replace the tool with one that connects to a weather API and returns real weather related forecast data. 
 
-In the ServerAGUI/Tools folder, add a C# class named _WeatherBackendTool.cs_ with this code:
+In the _ServerAGUI/Tools_ folder, add a C# class named _WeatherBackendTool.cs_ with this code:
 
 ```C#
+using System.ComponentModel;
+
+namespace ServerAGUI.Tools;
+
 internal static class WeatherBackendTool
 {
     [Description("Lookup the weather in a location.")]
@@ -60,14 +66,14 @@ internal static class WeatherBackendTool
 }
 ```
 
-In _Program.cs_, add this code before statement ``var app = builder.Build();``:
+In _Program.cs_, add this code right before statement ``var app = builder.Build();``:
 
 ```C#
 builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUI();
 ```
 
-To read the environment variables: add this code below statement ``var app = builder.Build();``:
+To read environment variables: add this code below statement ``var app = builder.Build();``:
 
 ```C#
 string? apiKey = builder.Configuration["GitHub:Token"];
@@ -105,4 +111,4 @@ Finally, replace the endpoint statement ``_``app.MapGet("/", () => "Hello World!
 app.MapAGUI("/", agent);
 ```
 
-This is it, we now have an AG-UI dserver that we will later connect to from a variety of clients.
+This is it, we now have an AG-UI server that we will later connect to from a variety of clients.
