@@ -1,4 +1,4 @@
-# Step 1: Creating an AG-UI Server
+# Creating an AG-UI Server
 
 From a working directory inside of a terminal window, create a web app named _ServerAGUI_ with the following command:
 
