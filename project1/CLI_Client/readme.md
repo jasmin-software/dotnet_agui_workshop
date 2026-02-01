@@ -1,11 +1,35 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+# Creating an AG-UI Client
 
-using System.Text.Json;
+The AG-UI client connects to the remote server and displays streaming responses.
+
+From inside the _AGUI_ folder, run these terminal window commands to create a client console application
+
+```bash
+dotnet new console -n ConsoleAGUI
+dotnet sln add ./ConsoleAGUI/ConsoleAGUI.csproj
+```
+
+**Required Packages**
+
+Install the necessary packages for the client:
+
+```bash
+cd ConsoleAGUI
+dotnet add package Microsoft.Agents.AI.AGUI --prerelease
+dotnet add package Microsoft.Agents.AI --prerelease
+cd ..
+```
+
+The Microsoft.Agents.AI package provides the AsAIAgent() extension method.
+
+Replace the contents of _/ConsoleAGUI/Program.cs_ with the following code:
+
+```C#
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
 
-string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:5000";
+string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
 
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
@@ -17,16 +41,14 @@ using HttpClient httpClient = new()
 
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 
-AIAgent agent = chatClient.CreateAIAgent(
+AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent");
 
-AgentThread thread = agent.GetNewThread();
-
+AgentSession session = await agent.GetNewSessionAsync();
 List<ChatMessage> messages =
 [
-    new(ChatRole.System, "You are a helpful assistant."),
-    new(ChatRole.User, "hello"),
+    new(ChatRole.System, "You are a helpful assistant.")
 ];
 
 try
@@ -54,8 +76,7 @@ try
         bool isFirstUpdate = true;
         string? threadId = null;
 
-        var updates = agent.RunStreamingAsync(messages, thread);
-        await foreach (AgentRunResponseUpdate update in updates)
+        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
@@ -63,7 +84,7 @@ try
             if (isFirstUpdate)
             {
                 threadId = chatUpdate.ConversationId;
-                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
                 Console.ResetColor();
                 isFirstUpdate = false;
@@ -74,7 +95,7 @@ try
             {
                 if (content is TextContent textContent)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Write(textContent.Text);
                     Console.ResetColor();
                 }
@@ -84,26 +105,10 @@ try
                     Console.WriteLine($"\n[Error: {errorContent.Message}]");
                     Console.ResetColor();
                 }
-                else if (content is FunctionCallContent functionCallContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    
-                    var argsJson = JsonSerializer.Serialize(
-                        functionCallContent.Arguments,
-                        new JsonSerializerOptions { WriteIndented = true }
-                    );
-                    Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
-                    Console.ResetColor();
-                }
-                else if (content is FunctionResultContent functionResultContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
-                    Console.ResetColor();
-                }
             }
         }
-        Console.ForegroundColor = ConsoleColor.DarkGray;
+
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
         Console.ResetColor();
     }
@@ -112,3 +117,19 @@ catch (Exception ex)
 {
     Console.WriteLine($"\nAn error occurred: {ex.Message}");
 }
+```
+
+**Testing the client**
+
+To test the client, you must run the server first. Therefore, open a terminal window in the _ServerAGUI_ folder and run the following command:
+
+```bash
+dotnet run --urls http://localhost:8888
+```
+
+You can now run the client console application in the _ConsoleAGUI_ folder with this command:
+
+```bash
+dotnet run
+```
+
