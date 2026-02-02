@@ -1,10 +1,14 @@
-# Tools calling
+# Tools
 
 ## Backend tools
 
+### Creating backend tools:
+
+There's already a backend tool (that gets the weather) defined on the server. 
+
 ### Calling backend tools:
 
-There's already a backend tool (that gets the weather) defined on the server. You can simply ask for the weather in the same console to call it.
+You can simply ask for the weather in the same console to call it.
 
 <details>
 <summary>
@@ -13,7 +17,6 @@ here's an example of the interaction:
 
 ![alt text](image-1.png)
 </details>
-
 
 <details>
 <summary>
