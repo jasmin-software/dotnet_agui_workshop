@@ -95,9 +95,9 @@ And you can simply ask it to send an email for you.
 here's an example of the interaction:
 </summary>
 
-![human-in-the-loop light themed output](hitl-light-output.png#gh-light-mode-only)
+![human-in-the-loop light themed output](hitl-output-light.png#gh-light-mode-only)
 
-![human-in-the-loop dark themed output](hitl-dark-output.png#gh-dark-mode-only)
+![human-in-the-loop dark themed output](hitl-output-dark.png#gh-dark-mode-only)
 </details>
 
 
