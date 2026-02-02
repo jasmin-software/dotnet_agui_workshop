@@ -10,6 +10,7 @@ There's already a backend tool (that gets the weather) defined on the server. Yo
 <summary>
 here's an example of the interaction:
 </summary>
+
 ![alt text](image-1.png)
 </details>
 
@@ -101,6 +102,7 @@ And you can simply ask for it to change the console foreground color.
 <summary>
 here's an example of the interaction:
 </summary>
+
 ![alt text](image.png)
 </details>
 
