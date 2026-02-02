@@ -10,6 +10,7 @@ There's already a backend tool (that gets the weather) defined on the server. Yo
 <summary>
 here's what's happening:
 </summary>
+
 ```mermaid
 graph TD;
     user--0.sends message that uses backend tool-->client;
@@ -17,6 +18,7 @@ graph TD;
     server--2.executes the tool and incorporate tool result to agent context -->server;
     server--3.sends agent response-->client;
 ```
+
 when you sends a message that requires calling the backend tool:
 1. the client sends the message to server via HTTP
 2. the server decides to execute the tool and incorporate the tool response into the agent context
@@ -95,6 +97,7 @@ else if (content is FunctionCallContent functionCallContent)
 <summary>
 here's what's happening:
 </summary>
+
 ```mermaid
 graph TD;
     user--0.sends message that uses client tool-->client;
