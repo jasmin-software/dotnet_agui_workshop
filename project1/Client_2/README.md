@@ -1,7 +1,46 @@
 # Tools calling
 
-## Creating client tools
+## Backend tools
 
+### Calling backend tools:
+
+There's already a backend tool (that gets the weather) defined on the server. You can simply ask for the weather in the same console to call it.
+
+<details>
+<summary>
+here's what's happening:
+</summary>
+```mermaid
+graph TD;
+    user--0.sends message that uses backend tool-->client;
+    client--1.HTTP-->server;
+    server--2.executes the tool and incorporate tool result to agent context -->server;
+    server--3.sends agent response-->client;
+```
+when you sends a message that requires calling the backend tool:
+1. the client sends the message to server via HTTP
+2. the server decides to execute the tool and incorporate the tool response into the agent context
+4. the server returns the response to the client
+</details>
+
+<details>
+
+<summary>
+here's an example of the interaction:
+</summary>
+
+
+![alt text](image-1.png)
+
+</details>
+
+
+
+## Client tools
+
+### Creating client tools:
+
+add this tool to the Program.cs in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
 void ChangeConsoleForegroundColor(string color)
@@ -19,7 +58,7 @@ void ChangeConsoleForegroundColor(string color)
 AIFunction changeConsoleForegroundColor = AIFunctionFactory.Create(ChangeConsoleForegroundColor);
 ```
 
-add the tool to the agent:
+add the tool to the agent [1]:
 ``` C#
 AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
@@ -52,6 +91,30 @@ else if (content is FunctionCallContent functionCallContent)
     }
 ```
 
+<details>
+<summary>
+here's what's happening:
+</summary>
+```mermaid
+graph TD;
+    user--0.sends message that uses client tool-->client;
+    client--1.HTTP-->server;
+    server--2.Tool call request(SSE)-->client;
+    client--3.Sends tool result-->server;
+    server--4.Sends agent response-->client;
+```
+
+the server doesn't know the implementation details of client side tools. it only knows:
+1. tool names and description (from [1])
+2. parameters schemas
+3. when to request tool execution
+
+when you sends a message that requires calling the client tool:
+1. the client sends the message to server via HTTP
+2. the server sends a tool call request back to client via SSE
+3. the client sends the tool result back to server
+4. the server incorporates the result into the agent context and returns the response back to the client
+</details>
 
 run this to start the client again
 ``` bash
@@ -69,17 +132,3 @@ here's an example of the interaction:
 
 </details>
 
-## Calling backend tools
-
-There's already a backend tool (that gets the weather) defined on the server. You can simply ask for the weather in the same console to call it.
-
-<details>
-
-<summary>
-here's an example of the interaction:
-</summary>
-
-
-![alt text](image-1.png)
-
-</details>
