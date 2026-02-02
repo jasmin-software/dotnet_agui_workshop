@@ -13,7 +13,7 @@ dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
 replaced Program.cs with this
-``` c#
+``` c# 
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
@@ -84,7 +84,7 @@ dotnet run
 here's an example of the interaction:
 </summary>
 
-``` 
+``` console
 $ dotnet run
 Connecting to AG-UI server at: http://localhost:8888
 

@@ -15,7 +15,7 @@ You can simply ask for the weather in the same console to call it.
 here's an example of the interaction:
 </summary>
 
-![alt text](backend-output.png)
+![backend output](backend-output.png)
 </details>
 
 <details>
@@ -56,13 +56,15 @@ void ChangeConsoleForegroundColor(string color)
         Console.ForegroundColor = ConsoleColor.White;
     }
 }
+```
 
-AIFunction changeConsoleForegroundColor = AIFunctionFactory.Create(ChangeConsoleForegroundColor);
+make it an `AIFunction`:
+``` C#
+AIFunction changeConsoleForegroundColorTool = AIFunctionFactory.Create(ChangeConsoleForegroundColor);
 ```
 
 add the tool to the agent [1]:
 ``` C#
-AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
@@ -106,7 +108,7 @@ And you can simply ask for it to change the console foreground color.
 here's an example of the interaction:
 </summary>
 
-![alt text](frontend-output.png)
+![frontend output](frontend-output.png)
 </details>
 
 
