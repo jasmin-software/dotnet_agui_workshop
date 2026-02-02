@@ -16,11 +16,13 @@ using HttpClient httpClient = new()
 };
 
 AGUIChatClient chatClient = new(httpClient, serverUrl);
+
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent");
 
 AgentThread thread = agent.GetNewThread();
+
 List<ChatMessage> messages =
 [
     new(ChatRole.System, "You are a helpful assistant."),
