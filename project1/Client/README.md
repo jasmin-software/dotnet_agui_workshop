@@ -54,8 +54,6 @@ try
 
         messages.Add(new ChatMessage(ChatRole.User, message));
 
-        // Sends message to server (HTTP POST request)
-        // Server responds with SSE stream
         await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
         {
             // Display streaming text content
@@ -73,13 +71,6 @@ catch (Exception ex)
 {
     Console.WriteLine($"\nAn error occurred: {ex.Message}");
 }
-```
-
-```mermaid
-graph TD;
-    user--0.sends message-->client;
-    client--1.HTTP-->server;
-    server--2.SSE-->client;
 ```
 
 run this to start the client
@@ -109,4 +100,22 @@ days to orbit the Sun.
 
 User (:q or quit to exit): :q
 ```
+</details>
+
+<details>
+<summary>
+here's what's happening:
+</summary>
+
+```mermaid
+graph TD;
+    user--0.sends message-->client;
+    client--1.HTTP-->server;
+    server--2.SSE-->client;
+```
+
+when you send a message:
+1. the client sends it to the server via HTTP
+2. the server respond to the client via SSE
+
 </details>

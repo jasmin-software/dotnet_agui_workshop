@@ -8,6 +8,14 @@ There's already a backend tool (that gets the weather) defined on the server. Yo
 
 <details>
 <summary>
+here's an example of the interaction:
+</summary>
+![alt text](image-1.png)
+</details>
+
+
+<details>
+<summary>
 here's what's happening:
 </summary>
 
@@ -24,18 +32,6 @@ when you sends a message that requires calling the backend tool:
 2. the server decides to execute the tool and incorporate the tool response into the agent context
 4. the server returns the response to the client
 </details>
-
-<details>
-
-<summary>
-here's an example of the interaction:
-</summary>
-
-
-![alt text](image-1.png)
-
-</details>
-
 
 
 ## Client tools
@@ -92,6 +88,22 @@ else if (content is FunctionCallContent functionCallContent)
         Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
     }
 ```
+### Calling client tools:
+
+run this to start the client again
+``` bash
+dotnet run
+```
+
+And you can simply ask for it to change the console foreground color.
+
+<details>
+<summary>
+here's an example of the interaction:
+</summary>
+![alt text](image.png)
+</details>
+
 
 <details>
 <summary>
@@ -118,20 +130,3 @@ when you sends a message that requires calling the client tool:
 3. the client sends the tool result back to server
 4. the server incorporates the result into the agent context and returns the response back to the client
 </details>
-
-run this to start the client again
-``` bash
-dotnet run
-```
-
-<details>
-
-<summary>
-here's an example of the interaction:
-</summary>
-
-
-![alt text](image.png)
-
-</details>
-
