@@ -15,7 +15,7 @@ You can simply ask for the weather in the same console to call it.
 here's an example of the interaction:
 </summary>
 
-![alt text](image-1.png)
+![alt text](backend-output.png)
 </details>
 
 <details>
@@ -106,7 +106,7 @@ And you can simply ask for it to change the console foreground color.
 here's an example of the interaction:
 </summary>
 
-![alt text](image.png)
+![alt text](frontend-output.png)
 </details>
 
 
