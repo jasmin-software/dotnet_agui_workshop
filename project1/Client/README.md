@@ -1,4 +1,4 @@
-# Client Tutorial
+# Client Setup
 
 create a new project
 ``` bash
