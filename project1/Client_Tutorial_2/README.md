@@ -25,7 +25,7 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
    user->>client: 0. Send message to get weather
-   client->>server: 1.HTTP
+   client->>server: 1.HTTP POST
    activate server
    Note right of server: 2. Executes GetWeather
    server->>client: 3. SSE response

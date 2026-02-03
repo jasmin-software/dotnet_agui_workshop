@@ -114,7 +114,7 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
     user->>client: 0. Send message
-    client->>server: 1.HTTP
+    client->>server: 1.HTTP POST
     activate server
     server->>client: 2.SSE
     deactivate server
@@ -123,6 +123,6 @@ sequenceDiagram;
 
 when you send a message in the console:
 1. the client relays it to the server via HTTP
-2. the server responds to the client via Server-Sent Events (SSE)
+2. the server returns the agent response back to the client via SSE
 3. the client displays it to you
 
