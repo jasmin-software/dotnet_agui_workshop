@@ -14,7 +14,7 @@ dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
 replaced Program.cs with this
-``` C# annotate
+``` C#
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
@@ -78,13 +78,13 @@ catch (Exception ex)
     Console.WriteLine($"\nAn error occurred: {ex.Message}");
 }
 ```
-TIP!
-check csproj and make sure you're using the following versions:
-```
-<PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.260128.1" />
-<PackageReference Include="Microsoft.Agents.AI.AGUI" Version="1.0.0-preview.260128.1" />
-```
 
+> [!TIP]
+> if you're getting syntax error, check .csproj and make sure you're using the following versions:
+> ```
+> <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.260128.1" />
+> <PackageReference Include="Microsoft.Agents.AI.AGUI" Version="1.0.0-preview.260128.1" />
+> ```
 ### Running the client
 
 you can optionally set a custom server URL:
