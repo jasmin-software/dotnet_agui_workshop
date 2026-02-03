@@ -109,10 +109,7 @@ here's an example of the interaction:
 
 </details>
 
-<details>
-<summary>
-here's what's happening:
-</summary>
+### What's happening?
 
 ```mermaid
 sequenceDiagram;
@@ -127,4 +124,3 @@ when you send a message in the console:
 2. the server responds to the client via Server-Sent Events (SSE)
 3. the client displays it to you
 
-</details>
