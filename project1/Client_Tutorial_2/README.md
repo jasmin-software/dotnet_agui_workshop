@@ -24,10 +24,10 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-   user->>client: 0. Send message (get weather for location)
+   user->>client: 0. Send message to get weather
    client->>server: 1.HTTP
    activate server
-   Note right of server: 2. Executes GetWeather(location) 
+   Note right of server: 2. Executes GetWeather
    server->>client: 3. SSE response
    deactivate server
    client->>user: 4. Display message
@@ -36,8 +36,8 @@ sequenceDiagram;
 
 when you sends a message to get weather for a location in the console:
 1. the client relays it to server via HTTP
-2. the agent on the server calls `GetWeather(location)` and incorporate the function result into the agent response
-3. the server returns the response to the client via SSE
+2. the agent on the server calls `WeatherBackendTool.GetWeather` with the appropriate arguments
+3. the server incorporates the result into the agent response and returns it back to the client via SSE
 4. the client displays it to you
 
 
@@ -126,14 +126,15 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-   user->>client:   0. Send message to change console foreground color
+   user->>client:   0. Send message to change text color
    client->>server: 1. HTTP POST
    activate server
    server->>client: 2. Send request to call SetTextColor via SSE
-   client->>server: 3. Sends result as FunctionResultContent
-   server->>client: 4. Sends agent response via SSE
+   Note left of client: 3. Executes SetTextColor
+   client->>server: 4. Sends result as FunctionResultContent
+   server->>client: 5. SSE response
    deactivate server
-   client->>user: 5. Display message
+   client->>user: 6. Display message
 ```
 
 > [!NOTE]
@@ -142,10 +143,11 @@ sequenceDiagram;
 > 2. parameters schemas
 > 3. when to request tool execution
 
-When you send a message to set the console foreground color in the console:
+When you send a message to change the console text color:
 1. the client relays it to the server via HTTP
 2. the server sends a tool execution request to the client via SSE
-3. the client sends result back to server as `FunctionResultContent`
-4. the server incorporates the result into the agent response and returns it back to the client via SSE
-5. the client display it to you
+3. the client calls `SetTextColor` with the appropriate arguments from the server 
+4. the client sends result back to server as `FunctionResultContent`
+5. the server incorporates the result into the agent response and returns it back to the client via SSE
+6. the client display it to you
 
