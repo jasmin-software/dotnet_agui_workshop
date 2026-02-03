@@ -21,7 +21,6 @@ here's an example of the interaction:
 </details>
 
 ### What's happening?
-here's what's happening:
 
 ```mermaid
 sequenceDiagram;
@@ -42,14 +41,14 @@ when you sends a message to get weather for a location in the console:
 4. the client displays it to you
 
 
-## Client tools
+## Frontend tools
 
-### Creating client tools:
+### Creating frontend tools:
 
 add this tool to the Program.cs in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
-void ChangeClientForegroundColor(string color)
+void SetTextColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
@@ -68,9 +67,9 @@ make it an `AIFunction`:
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
-add the tool to the agent [1]:
+add the tool to the agent [^1]:
 ``` C#
-AIAgent agent = chatClient.CreateAIAgent(
+AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
     tools: [setTextColorTool]);
@@ -92,16 +91,18 @@ add these two else-if conditions to the `AIContent` foreach loop so you'd know w
                         functionCallContent.Arguments,
                         new JsonSerializerOptions { WriteIndented = true }
                     );
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
-                    Console.ForegroundColor = currentColor;
+                    Console.ForegroundColor = currentTextColor;
                 }
                 else if (content is FunctionResultContent functionResultContent)
                 {
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
-                }    
+                    Console.ForegroundColor = currentTextColor;
+                }      
 ```
-### Calling client tools:
+### Calling frontend tools:
 
 run this to start the client again
 ``` bash
@@ -115,8 +116,9 @@ And you can simply ask for it to change the console foreground color.
 here's an example of the interaction:
 </summary>
 
-![alt text](frontend-output.png)
-![frontend output](frontend-output.png)
+![frontend dark output](./assets/frontend-dark.png#gh-dark-mode-only)
+
+![frontend light output](./assets/frontend-light.png#gh-light-mode-only)
 </details>
 
 
@@ -135,8 +137,8 @@ sequenceDiagram;
 ```
 
 > [!NOTE]
-> the server doesn't know any implementation details of client side tools. it only knows:
-> 1. tool names and description (from [1])
+> the server doesn't know any implementation details of frontend tools. it only knows:
+> 1. tool names and description [^1]
 > 2. parameters schemas
 > 3. when to request tool execution
 

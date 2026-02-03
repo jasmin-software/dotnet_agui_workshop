@@ -36,7 +36,7 @@ AIAgent agent = chatClient.AsAIAgent(
 List<ChatMessage> messages = [];
 AgentSession session = await agent.GetNewSessionAsync();
 
-ConsoleColor currentForegroundColor = Console.ForegroundColor;
+ConsoleColor currentTextColor = Console.ForegroundColor;
 Console.Write("\nEnter your message or :q to quit.\n");
 string regularPrompt = "\n> ";
 
