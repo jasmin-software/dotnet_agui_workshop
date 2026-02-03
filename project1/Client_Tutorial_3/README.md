@@ -15,7 +15,7 @@
 add this tool to the Program.cs in the client folder:
 ``` C#
 [Description("Generate a text file with the specified filename and content.")]
-static string GenerateTextFile(
+string GenerateTextFile(
     [Description("The filename to generate")] string filename,
     [Description("The content to write to the file")] string content)
 {

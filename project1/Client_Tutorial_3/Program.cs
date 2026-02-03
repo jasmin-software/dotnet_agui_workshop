@@ -135,7 +135,7 @@ string SetTextColor(string color)
 }
 
 [Description("Generate a text file with the specified filename and content.")]
-static string GenerateTextFile(
+string GenerateTextFile(
     [Description("The filename to generate")] string filename,
     [Description("The content to write to the file")] string content)
 {
