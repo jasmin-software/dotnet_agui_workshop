@@ -49,7 +49,7 @@ when you sends a message to get weather for a location in the console:
 add this tool to the Program.cs in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
-void ChangeConsoleForegroundColor(string color)
+void ChangeClientForegroundColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
@@ -63,10 +63,9 @@ void ChangeConsoleForegroundColor(string color)
 }
 ```
 
-AIFunction changeConsoleForegroundColor = AIFunctionFactory.Create(ChangeConsoleForegroundColor);
 make it an `AIFunction`:
 ``` C#
-AIFunction changeConsoleForegroundColorTool = AIFunctionFactory.Create(ChangeConsoleForegroundColor);
+AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
 add the tool to the agent [1]:
@@ -74,7 +73,7 @@ add the tool to the agent [1]:
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
-    tools: [changeConsoleForegroundColorTool]);
+    tools: [setTextColorTool]);
 ```
 
 add instruction for the agent when using the client tool:
@@ -124,21 +123,27 @@ here's an example of the interaction:
 ### What's happening?
 
 ```mermaid
-graph TD;
-   user--0.sends message that uses client tool-->client;
-   client--1.HTTP-->server;
-   server--2.Tool call request(SSE)-->client;
-   client--3.Sends tool result-->server;
-   server--4.Sends agent response-->client;
+sequenceDiagram;
+   user->>client:   0. Send message to change console foreground color
+   client->>server: 1. HTTP POST
+   activate server
+   server->>client: 2. Send request to call SetTextColor via SSE
+   client->>server: 3. Sends result as FunctionResultContent
+   server->>client: 4. Sends agent response via SSE
+   deactivate server
+   client->>user: 5. Display message
 ```
 
-the server doesn't know the implementation details of client side tools. it only knows:
-1. tool names and description (from [1])
-2. parameters schemas
-3. when to request tool execution
+> [!NOTE]
+> the server doesn't know any implementation details of client side tools. it only knows:
+> 1. tool names and description (from [1])
+> 2. parameters schemas
+> 3. when to request tool execution
 
-when you sends a message that requires calling the client tool:
-1. the client sends the message to server via HTTP
-2. the server sends a tool call request back to client via SSE
-3. the client sends the tool result back to server
-4. the server incorporates the result into the agent context and returns the response back to the client
+When you send a message to set the console foreground color in the console:
+1. the client relays it to the server via HTTP
+2. the server sends a tool execution request to the client via SSE
+3. the client sends result back to server as `FunctionResultContent`
+4. the server incorporates the result into the agent response and returns it back to the client via SSE
+5. the client display it to you
+
