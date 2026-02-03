@@ -115,7 +115,9 @@ here's an example of the interaction:
 sequenceDiagram;
     user->>client: 0. Send message
     client->>server: 1.HTTP
+    activate server
     server->>client: 2.SSE
+    deactivate server
     client->>user: 3. Display message
 ```
 

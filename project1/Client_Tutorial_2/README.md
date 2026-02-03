@@ -15,28 +15,31 @@ You can simply ask for the weather in the same console to call it.
 here's an example of the interaction:
 </summary>
 
-![alt text](backend-output.png)
-![backend output](backend-output.png)
+![backend dark output](./assets/backend-dark.png#gh-dark-mode-only)
+
+![backend light output](./assets/backend-light.png#gh-light-mode-only)
 </details>
 
-<details>
-<summary>
+### What's happening?
 here's what's happening:
-</summary>
 
 ```mermaid
-graph TD;
-   user--0.sends message that uses backend tool-->client;
-   client--1.HTTP-->server;
-   server--2.executes the tool and incorporate tool result to agent context -->server;
-   server--3.sends agent response-->client;
+sequenceDiagram;
+   user->>client: 0. Send message (get weather for location)
+   client->>server: 1.HTTP
+   activate server
+   Note right of server: 2. Executes GetWeather(location) 
+   server->>client: 3. SSE response
+   deactivate server
+   client->>user: 4. Display message
+   
 ```
 
-when you sends a message that requires calling the backend tool:
-1. the client sends the message to server via HTTP
-2. the server decides to execute the tool and incorporate the tool response into the agent context
-4. the server returns the response to the client
-</details>
+when you sends a message to get weather for a location in the console:
+1. the client relays it to server via HTTP
+2. the agent on the server calls `GetWeather(location)` and incorporate the function result into the agent response
+3. the server returns the response to the client via SSE
+4. the client displays it to you
 
 
 ## Client tools
@@ -48,14 +51,15 @@ add this tool to the Program.cs in the client folder:
 [Description("Change the console foreground color into the specified color.")]
 void ChangeConsoleForegroundColor(string color)
 {
-if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
-{
-Console.ForegroundColor = parsedColor;
-}
-else
-{
-Console.ForegroundColor = ConsoleColor.White;
-}
+    if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
+    {
+        currentColor = parsedColor;
+        Console.ForegroundColor = parsedColor;
+    }
+    else
+    {
+        throw new ArgumentException($"Invalid console colour '{color}'", nameof(color));
+    }
 }
 ```
 
@@ -67,35 +71,36 @@ AIFunction changeConsoleForegroundColorTool = AIFunctionFactory.Create(ChangeCon
 
 add the tool to the agent [1]:
 ``` C#
-AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.CreateAIAgent(
-name: "agui-client",
-description: "AG-UI Client Agent",
-tools: [changeConsoleForegroundColor]);
+    name: "agui-client",
+    description: "AG-UI Client Agent",
+    tools: [changeConsoleForegroundColorTool]);
 ```
 
 add instruction for the agent when using the client tool:
 ``` C#
 List<ChatMessage> messages =
 [
-new(ChatRole.System, "If you're asked to return a color for the console foreground, return from the enum of ConsoleColor, with CamelCase."),
+    new(ChatRole.System, "When asked to return a color for the console foreground, choose the closest one from the ConsoleColor enum and return with CamelCase."),
 ];
 ```
 
 add these two else-if conditions to the `AIContent` foreach loop so you'd know when the function is called, what arguments are passed in, and what result the function return:
 ``` C#
-else if (content is FunctionCallContent functionCallContent)
-{       
-var argsJson = JsonSerializer.Serialize(
-functionCallContent.Arguments,
-new JsonSerializerOptions { WriteIndented = true }
-);
-Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
-}
-else if (content is FunctionResultContent functionResultContent)
-{
-Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
-}
+                else if (content is FunctionCallContent functionCallContent)
+                {                    
+                    var argsJson = JsonSerializer.Serialize(
+                        functionCallContent.Arguments,
+                        new JsonSerializerOptions { WriteIndented = true }
+                    );
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine($"\n[Function Call: {functionCallContent.Name}]\nArguments:\n{argsJson}");
+                    Console.ForegroundColor = currentColor;
+                }
+                else if (content is FunctionResultContent functionResultContent)
+                {
+                    Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
+                }    
 ```
 ### Calling client tools:
 
@@ -116,10 +121,7 @@ here's an example of the interaction:
 </details>
 
 
-<details>
-<summary>
-here's what's happening:
-</summary>
+### What's happening?
 
 ```mermaid
 graph TD;
