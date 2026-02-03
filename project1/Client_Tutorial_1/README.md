@@ -1,5 +1,8 @@
 # Client Setup
 
+> [!IMPORTANT]
+> Before running the client, ensure the AG-UI server is running at `http://localhost:5000`.
+
 ### Setting up the client
 ``` bash
 dotnet new console -o Client_Tutorial
