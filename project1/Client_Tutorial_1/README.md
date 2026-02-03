@@ -39,13 +39,15 @@ AgentSession session = await agent.GetNewSessionAsync();
 ConsoleColor currentTextColor = Console.ForegroundColor;
 Console.Write("\nEnter your message or :q to quit.\n");
 string regularPrompt = "\n> ";
+string approvalPrompt = "\nApprove execution? (approve/deny): ";
+bool awaitingApproval = false;
 
 try
 {
     while (true)
     {
         // Get and validate user input
-        Console.Write(regularPrompt);
+        Console.Write(awaitingApproval ? approvalPrompt : regularPrompt);
         string? message = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(message))

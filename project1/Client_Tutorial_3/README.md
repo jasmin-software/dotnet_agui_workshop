@@ -2,15 +2,30 @@
 
 ### Creating tools with that requires approval/human in the loop:
 
+> [!TIP] 
+> `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation purposes only. 
+> Create a .editorconfig file with the following content to suppress the syntax error so that you can proceed.
+> In the folder where Program.cs is, create a .editorconfig file with this content:
+> ```
+> [*.cs]
+> 
+> # MEAI001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+> dotnet_diagnostic.MEAI001.severity = none
+> ```
+
 add this tool to the Program.cs in the client folder:
 ``` C#
-[Description("Send an email to a recipient.")]
-static string SendEmail(
-    [Description("The email address to send to")] string to,
-    [Description("The subject line")] string subject,
-    [Description("The email body")] string body)
+[Description("Generate a text file with the specified filename and content.")]
+static string GenerateTextFile(
+    [Description("The filename to generate")] string filename,
+    [Description("The content to write to the file")] string content)
 {
-    return $"Email sent to {to} with subject '{subject}'";
+    string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
+    string filePath = Path.Combine(projectRoot, filename);
+
+    File.WriteAllText(filePath, content);
+
+    return $"File written to: {filePath}";
 }
 ```
 
@@ -24,25 +39,17 @@ add the tool to the agent:
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
-    tools: [changeConsoleForegroundColor, 
-            approvalRequiredSendEmailTool]);
+    tools: [setTextColorTool, 
+            generateTextFileTool]);
 ```
 
 create a helper function that handles the approval response:
 ``` c#
 async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 {
-    var updates = agent.RunStreamingAsync(message);
-
-    await foreach (AgentRunResponseUpdate update in updates)
+    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(message))
     {
-        foreach (AIContent content in update.Contents)
-        {
-            if (content is TextContent textContent)
-            {
-                Console.Write(textContent.Text);
-            }
-        }
+        Console.Write(update.Text);
     }
     awaitingApproval = false;
 }
@@ -50,35 +57,35 @@ async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 
 add this else-if condition to the `AIContent` foreach loop to take care of the function approval:
 ``` C#
-else if (content is FunctionApprovalRequestContent request)
-{
-    var input = message.Trim().ToLowerInvariant();
-    if (input == "approve" || input == "a" || input == "yes" || input == "y")
-    {
-        var approvalMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(true)]);
-        Console.ForegroundColor = ConsoleColor.Green;
-        await HandleFunctionApprovalResponse(agent, approvalMessage);
-        Console.ForegroundColor = currentColor;
-    }
-    else if (input == "deny" || input == "d" || input == "no" || input == "n")
-    {
-        var denialMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(false)]);
-        Console.ForegroundColor = ConsoleColor.Red;
-        await HandleFunctionApprovalResponse(agent, denialMessage);
-        Console.ForegroundColor = currentColor;
-    }
-    else
-    {
-        var argsJson = JsonSerializer.Serialize(
-            request.FunctionCall.Arguments,
-            new JsonSerializerOptions { WriteIndented = true }
-        );
-        Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine($"\nPlease confirm that you'd like to send the email with the following details:\n{argsJson}");
-        Console.ForegroundColor = currentColor;
-        awaitingApproval = true;
-    }
-}
+                else if (content is FunctionApprovalRequestContent request)
+                {
+                    var input = message.Trim().ToLowerInvariant();
+                    if (input == "approve" || input == "a" || input == "yes" || input == "y")
+                    {
+                        var approvalMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(true)]);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        await HandleFunctionApprovalResponse(agent, approvalMessage);
+                        Console.ForegroundColor = currentColor;
+                    }
+                    else if (input == "deny" || input == "d" || input == "no" || input == "n")
+                    {
+                        var denialMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(false)]);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        await HandleFunctionApprovalResponse(agent, denialMessage);
+                        Console.ForegroundColor = currentColor;
+                    }
+                    else
+                    {
+                        var argsJson = JsonSerializer.Serialize(
+                            request.FunctionCall.Arguments,
+                            new JsonSerializerOptions { WriteIndented = true }
+                        );
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine($"\nPlease confirm that you'd like to send the email with the following details:\n{argsJson}");
+                        Console.ForegroundColor = currentColor;
+                        awaitingApproval = true;
+                    }
+                }
 ```
 
 ### Using tools with approval:
@@ -88,40 +95,46 @@ run this to start the client again:
 dotnet run
 ```
 
-And you can simply ask it to send an email for you.
+And you can simply ask it to create a text file for you
 
 <details>
 <summary>
 here's an example of the interaction:
 </summary>
 
-![human-in-the-loop light themed output](hitl-output-light.png#gh-light-mode-only)
+![human-in-the-loop light themed output](./assets/hitl-output-light.png#gh-light-mode-only)
 
-![human-in-the-loop dark themed output](hitl-output-dark.png#gh-dark-mode-only)
+![human-in-the-loop dark themed output](./assets/hitl-output-dark.png#gh-dark-mode-only)
 </details>
 
 
-<details>
-<summary>
-here's what's happening:
-</summary>
+### What's happening?
 
 ```mermaid
-graph TD;
-    user--0.sends message that uses client tool-->client;
-    client--1.HTTP-->server;
-    server--2.Tool call request(SSE)-->client;
-    client--3.Prompt user for approval-->user;
-    user--4.(approve/deny)-->client;
-    client--5.create function response and sent to-->server;
-    server--6.Sends agent response-->client;
+sequenceDiagram;
+   user->>client:   0. Send message to create text file
+   client->>server: 1. RunStreamingAsync()
+   activate server
+   server->>client: 2. Send FunctionApprovalRequestContent
+   client->>user: 3. Prompt for approval
+   user->>client: 4. Send approval
+   client->>server: 5. Create and send as FunctionApprovalRequestContent 
+   server->>client: 6. Send request to call GenerateTextFile
+   Note left of client: 7. Executes GenerateTextFile
+   client->>server: 8. Send GenerateTextFile result
+   server->>client: 9. SSE response
+   deactivate server
+   client->>user: 10. Display message
 ```
 
-when you sends a message that requires calling the tool that requires approval:
-1. the client sends the message to server via HTTP
-2. the server sends a tool call request back to client via SSE
-3. the client prompts user for approval
-4. user decides if they approve or deny the tool execution
-5. client converts user's response into a function response and pass it to the server
-6. the server incorporates the result into the agent context and returns the response back to the client
-</details>
+When you send a message to generate text file:
+1. the client relays it to the server via HTTP
+2. the server sends a request to prompt user for approval to the client as `FunctionApprovalRequestContent`
+3. the client prompts the users for approval
+4. the user decides if they approve or deny the toll execution
+5. the client converts user's response into a `FunctionApprovalRequestContent` and sends it to the server
+6. the server sends the tool call request to client
+7. the client calls `GenerateTextFile` with the appropriate arguments from the server
+8. the client sends the result from `GenerateTextFile` back to the server
+9. the server incorporates the result into the agent response and returns it back to the client via SSE
+10. the client display it to you

@@ -131,7 +131,7 @@ sequenceDiagram;
    activate server
    server->>client: 2. Send request to call SetTextColor via SSE
    Note left of client: 3. Executes SetTextColor
-   client->>server: 4. Sends result as FunctionResultContent
+   client->>server: 4. Send result as FunctionResultContent
    server->>client: 5. SSE response
    deactivate server
    client->>user: 6. Display message
