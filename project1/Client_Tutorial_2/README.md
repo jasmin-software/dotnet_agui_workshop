@@ -67,7 +67,7 @@ make it an `AIFunction`:
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
-add the tool to the agent [^1]:
+<a name="client-registration">add the tool to the agent</a>:
 ``` C#
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
@@ -139,7 +139,7 @@ sequenceDiagram;
 
 > [!NOTE]
 > the server doesn't know any implementation details of frontend tools. it only knows:
-> 1. tool names and description [^1]
+> 1. tool names and description ([here](#client-registration))
 > 2. parameters schemas
 > 3. when to request tool execution
 
