@@ -4,11 +4,10 @@
 
 > [!TIP] 
 > `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation purposes only. 
-> Create a .editorconfig file with the following content to suppress the syntax error so that you can proceed.
-> In the folder where Program.cs is, create a .editorconfig file with this content:
+>
+> To proceed, create an `.editorconfig` file with the following content. 
 > ```
 > [*.cs]
-> 
 > # MEAI001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 > dotnet_diagnostic.MEAI001.severity = none
 > ```
