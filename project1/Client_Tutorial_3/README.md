@@ -111,19 +111,18 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-   user->>client:   0. Send message to create text file
-   client->>server: 1. RunStreamingAsync()
-   activate server
-   server->>client: 2. Send FunctionApprovalRequestContent
-   client->>user: 3. Prompt for approval
-   user->>client: 4. Send approval
-   client->>server: 5. Create and send as FunctionApprovalRequestContent 
-   server->>client: 6. Send request to call GenerateTextFile
-   Note left of client: 7. Executes GenerateTextFile
-   client->>server: 8. Send GenerateTextFile result
-   server->>client: 9. SSE response
-   deactivate server
-   client->>user: 10. Display message
+   User->>Client:   0. Send message to create text file
+   Client->>Server: 1. RunStreamingAsync()
+   activate Server
+   Server->>Client: 2. Send FunctionApprovalRequestContent
+   Client->>User: 3. Prompt for approval
+   User->>Client: 4. Send approval (approve/deny)
+   Client->>Server: 5. Send approval as FunctionApprovalRequestContent 
+   Server->>Client: 6. Send request to call GenerateTextFile
+   Client->>Server: 7. Execute GenerateTextFile and send result
+   Server->>Client: 8. Stream SSE response
+   deactivate Server
+   Client->>User: 9. Display message
 ```
 
 When you send a message to generate text file:

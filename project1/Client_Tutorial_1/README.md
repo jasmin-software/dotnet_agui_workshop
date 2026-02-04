@@ -120,16 +120,15 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-    user->>client: 0. Send message
-    client->>server: 1.HTTP POST
-    activate server
-    server->>client: 2.SSE
-    deactivate server
-    client->>user: 3. Display message
+    User->>Client: 0. Send message
+    Client->>Server: 1. RunStreamingAsync()
+    activate Server
+    Server->>Client: 2. Stream SSE response
+    deactivate Server
+    Client->>User: 3. Display message
 ```
 
-when you send a message in the console:
-1. the client relays it to the server via HTTP
-2. the server returns the agent response back to the client via SSE
-3. the client displays it to you
-
+When you send a message in the console:
+1. The client relays the message to the server via HTTP (`RunStreamingAsync`)
+2. The server streams the agent response back to the client via SSE
+3. The client displays the response back to you

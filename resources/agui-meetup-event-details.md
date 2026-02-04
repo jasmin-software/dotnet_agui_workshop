@@ -24,4 +24,4 @@ Whether you’re building internal tools, experimenting with AI agents, or explo
 ## Speakers
 ### Medhat Elmasry & Jasmin Goh
 - **Medhat Elmasry** is an instructor at BCIT, Microsoft MVP since 2017, and founder of the .NET BC Meetup Group. He is a big fan of .NET.
-- **Jasmin Goh** is a software engineer with 4+ years of experience building enterprise .NET applications. She enjoys building things that are intuitive to use— and enjoyable to work with.
+- **Jasmin Goh** is a software engineer with 4+ years of experience building enterprise .NET applications. She enjoys building things that are intuitive to use—and enjoyable to work with.

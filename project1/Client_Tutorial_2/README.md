@@ -24,21 +24,20 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-   user->>client: 0. Send message to get weather
-   client->>server: 1.HTTP POST
-   activate server
-   Note right of server: 2. Executes GetWeather
-   server->>client: 3. SSE response
-   deactivate server
-   client->>user: 4. Display message
-   
+   User->>Client: 0. Send message to get weather
+   Client->>Server: 1. RunStreamingAsync()
+   activate Server
+   Note right of Server: 2. Decide and execute GetWeather
+   Server->>Client: 3. Stream SSE response
+   deactivate Server
+   Client->>User: 4. Display message
 ```
 
 when you sends a message to get weather for a location in the console:
-1. the client relays it to server via HTTP
-2. the agent on the server calls `WeatherBackendTool.GetWeather` with the appropriate arguments
-3. the server incorporates the result into the agent response and returns it back to the client via SSE
-4. the client displays it to you
+1. The client relays the message to server via HTTP (`RunStreamingAsync`)
+2. The agent on the server decides to execute `WeatherBackendTool.GetWeather` with the appropriate arguments
+3. The server incorporates the result into the agent response and streams it back to the client via SSE
+4. The client displays the response to you
 
 
 ## Frontend tools
@@ -126,15 +125,15 @@ here's an example of the interaction:
 
 ```mermaid
 sequenceDiagram;
-   user->>client:   0. Send message to change text color
-   client->>server: 1. HTTP POST
-   activate server
-   server->>client: 2. Send request to call SetTextColor via SSE
-   Note left of client: 3. Executes SetTextColor
-   client->>server: 4. Send result as FunctionResultContent
-   server->>client: 5. SSE response
-   deactivate server
-   client->>user: 6. Display message
+   User->>Client:   0. Send message to change text color
+   Client->>Server: 1. RunStreamingAsync()
+   activate Server
+   Server->>Client: 2. Request to call SetTextColor
+   Note left of Client: 3. Executes SetTextColor
+   Client->>Server: 4. Send result as FunctionResultContent
+   Server->>Client: 5. Stream SSE response
+   deactivate Server
+   Client->>User: 6. Display message
 ```
 
 > [!NOTE]
@@ -144,10 +143,10 @@ sequenceDiagram;
 > 3. when to request tool execution
 
 When you send a message to change the console text color:
-1. the client relays it to the server via HTTP
-2. the server sends a tool execution request to the client via SSE
+1. The client relays the message to the server via HTTP (`RunStreamingAsync`)
+2. The server requests tool execution from the client
 3. the client calls `SetTextColor` with the appropriate arguments from the server 
 4. the client sends result back to server as `FunctionResultContent`
-5. the server incorporates the result into the agent response and returns it back to the client via SSE
+5. the server incorporates the result into the agent response and streams it back to the client via SSE
 6. the client display it to you
 
