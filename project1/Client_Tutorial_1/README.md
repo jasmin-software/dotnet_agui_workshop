@@ -21,6 +21,8 @@ replaced Program.cs with this
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
+using System.ComponentModel;
+using System.Text.Json;
 
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:5000";
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
