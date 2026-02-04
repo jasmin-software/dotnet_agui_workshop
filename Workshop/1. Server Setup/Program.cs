@@ -26,16 +26,12 @@ string? apiKey = config["GitHub:Token"];
 string? endpoint = config["GitHub:ApiEndpoint"] ?? "https://models.github.ai/inference";
 string? deploymentName = config["GitHub:Model"] ?? "openai/gpt-4o-mini";
 
-#pragma warning disable MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 AITool[] tools =
 [
-    // new ApprovalRequiredAIFunction(AIFunctionFactory.Create(WeatherBackendTool.GetWeather)),
-    AIFunctionFactory.Create(WeatherBackendTool.GetWeather),
-    AIFunctionFactory.Create(RecipeBackendTool.UpdateRecipe)
+    AIFunctionFactory.Create(WeatherBackendTool.GetWeather)
 ];
-#pragma warning restore MEAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
-// Create AI agent // non-shared-state agent
+// Create AI agent
 AIAgent agent = new OpenAIClient(
     new ApiKeyCredential(apiKey!),
     new OpenAIClientOptions()
@@ -48,6 +44,7 @@ AIAgent agent = new OpenAIClient(
         name: "Socrates",
         tools: tools);
 
+// Map the AG-UI agent endpoint
 app.MapAGUI("/", agent);
 
 await app.RunAsync();
