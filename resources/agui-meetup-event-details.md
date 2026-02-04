@@ -20,3 +20,8 @@ AG-UI is a standard that defines how AI agents communicate with user-facing appl
 - A GitHub Personal Access Token (fine-grained, with Model (read) permission)
 
 Whether you’re building internal tools, experimenting with AI agents, or exploring how **.NET**, **AG-UI**, and **Blazor** fit together–this workshop will give you a practical foundation you can build on.
+
+## Speakers
+### Medhat Elmasry & Jasmin Goh
+- Medhat Elmasry is an instructor at BCIT, Microsoft MVP since 2017, and founder of the .NET BC Meetup Group. He is a big fan of .NET.
+- Jasmin Goh is a software engineer with 4+ years of experience building enterprise .NET applications. She enjoys building things that are intuitive to use - and enjoyable to work with.
