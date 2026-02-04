@@ -4,7 +4,7 @@ Join us for a **hands-on workshop** where you’ll build a **CLI-based AI agent*
 
 AG-UI is a standard that defines how AI agents communicate with user-facing applications. It enables powerful capabilities like **streaming chat**, **tool calling**, **human-in-the-loop interactions**, and extensible UI patterns–without tightly coupling your agent to a specific frontend.
 
-In this workshop, we will:
+### In this workshop, we will
 - Walk through core concepts of **AG-UI**
 - Build a working **AI agent as a .NET CLI application**
 - Explore how the same agent can be extended to a **Blazor web application**
