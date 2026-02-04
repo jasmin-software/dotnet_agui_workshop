@@ -1,6 +1,6 @@
 # Human-in-the-Loop
 
-### Creating tools with that requires approval/human in the loop:
+### Creating tools that requires approval/human in the loop:
 
 > [!TIP] 
 > `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation purposes only. 
