@@ -1,19 +1,16 @@
 # Client Setup
 
-> [!IMPORTANT]
-> Before running the client, ensure the AG-UI server is running at `http://localhost:5000`.
-
 ### Setting up the client
 ``` bash
-dotnet new console -o Client_Tutorial
+dotnet new console -o Client
 ```
 
 cd into the directory, and run these to install the required packages
 
 ``` bash
-cd Client_Tutorial
-dotnet add package Microsoft.Agents.AI.AGUI --prerelease
-dotnet add package Microsoft.Agents.AI --prerelease
+cd Client
+dotnet add package Microsoft.Agents.AI.AGUI --version 1.0.0-preview.260128.1
+dotnet add package Microsoft.Agents.AI --version 1.0.0-preview.260128.1
 ```
 
 replaced Program.cs with this
@@ -86,20 +83,17 @@ catch (Exception ex)
 }
 ```
 
-> [!TIP]
-> if you're getting syntax error, check .csproj and make sure you're using the following versions:
-> ```
-> <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.260128.1" />
-> <PackageReference Include="Microsoft.Agents.AI.AGUI" Version="1.0.0-preview.260128.1" />
-> ```
 ### Running the client
 
-you can optionally set a custom server URL:
-``` bash
-export AGUI_SERVER_URL="http://localhost:8888"
-```
+> [!IMPORTANT]
+> Before running the client, ensure the the server is running at `http://localhost:5000`.
+>
+> You can do this by running this in the `Server` folder:
+> ```
+> dotnet run --urls http://localhost:5000
+> ```
 
-run this to start the client
+To start the client, run this in the `Client` folder:
 ``` bash
 dotnet run
 ```

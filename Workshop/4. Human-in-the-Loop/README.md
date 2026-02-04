@@ -2,10 +2,12 @@
 
 ### Creating tools that requires approval/human in the loop:
 
-> [!TIP] 
-> `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation purposes only. 
+> [!TIP]
 >
-> To proceed, create an `.editorconfig` file with the following content. 
+> `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are meant for evaluation and may change or be removed in future updates. They will be highlighted with a warning (similar to a syntax error) in your editor. 
+>
+> To ignore this warning, create an `.editorconfig` file in the project root folder with the following content: 
+>
 > ```
 > [*.cs]
 > # MEAI001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
@@ -112,27 +114,28 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
    User->>Client:   0. Send message to create text file
-   Client->>Server: 1. RunStreamingAsync()
+   Client->>Server: 1. Start streaming request
    activate Server
-   Server->>Client: 2. Send FunctionApprovalRequestContent
+   Server->>Client: 2. Request approval
    Client->>User: 3. Prompt for approval
-   User->>Client: 4. Send approval (approve/deny)
-   Client->>Server: 5. Send approval as FunctionApprovalRequestContent 
-   Server->>Client: 6. Send request to call GenerateTextFile
-   Client->>Server: 7. Execute GenerateTextFile and send result
-   Server->>Client: 8. Stream SSE response
+   User->>Client: 4. Reply (approve/deny)
+   Client->>Server: 5. Send approval response
+   Server->>Client: 6. Request to call GenerateTextFile
+   Note left of Client: 7 Execute GenerateTextFile
+   Client->>Server: 8. Return result
+   Server->>Client: 9. Stream SSE response
    deactivate Server
-   Client->>User: 9. Display message
+   Client->>User: 10. Display message
 ```
 
-When you send a message to generate text file:
-1. the client relays it to the server via HTTP
-2. the server sends a request to prompt user for approval to the client as `FunctionApprovalRequestContent`
-3. the client prompts the users for approval
-4. the user decides if they approve or deny the toll execution
-5. the client converts user's response into a `FunctionApprovalRequestContent` and sends it to the server
-6. the server sends the tool call request to client
-7. the client calls `GenerateTextFile` with the appropriate arguments from the server
-8. the client sends the result from `GenerateTextFile` back to the server
-9. the server incorporates the result into the agent response and returns it back to the client via SSE
-10. the client display it to you
+When you send a message to generate a text file:
+1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
+2. The server requests tool execution approval (`FunctionApprovalRequestContent`) from the client.
+3. The client prompts the user for approval.
+4. The user approves or denies the request.
+5. The client converts the user's decision into a `FunctionApprovalResponseContent` and sends it back to the server.
+6. The server sends the tool call request to the client.
+7. The client executes `GenerateTextFile` with arguments provided by the server.
+8. The client sends the result of `GenerateTextFile` back to the server.
+9. The server incorporates the result into the agent response and streams it back to the client via SSE.
+10. The client displays the message to you.
