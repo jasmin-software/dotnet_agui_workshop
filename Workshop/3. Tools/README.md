@@ -25,19 +25,20 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
    User->>Client: 0. Send message to get weather
-   Client->>Server: 1. RunStreamingAsync()
+   Client->>Server: 1. Start streaming request
    activate Server
-   Note right of Server: 2. Decide and execute GetWeather
+   Note right of Server: 2. Execute GetWeather
    Server->>Client: 3. Stream SSE response
    deactivate Server
    Client->>User: 4. Display message
 ```
 
-when you sends a message to get weather for a location in the console:
-1. The client relays the message to server via HTTP (`RunStreamingAsync`)
-2. The agent on the server decides to execute `WeatherBackendTool.GetWeather` with the appropriate arguments
-3. The server incorporates the result into the agent response and streams it back to the client via SSE
-4. The client displays the response to you
+When you send a message to get the weather for a location:
+
+1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
+2. The server determines the arguments and executes `WeatherBackendTool.GetWeather`.
+3. The server incorporates the result into the agent response and streams it back to the client via SSE.
+4. The client displays the message to you.
 
 
 ## Frontend tools
@@ -126,27 +127,27 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
    User->>Client:   0. Send message to change text color
-   Client->>Server: 1. RunStreamingAsync()
+   Client->>Server: 1. Start streaming request
    activate Server
    Server->>Client: 2. Request to call SetTextColor
    Note left of Client: 3. Executes SetTextColor
-   Client->>Server: 4. Send result as FunctionResultContent
+   Client->>Server: 4. Return result
    Server->>Client: 5. Stream SSE response
    deactivate Server
    Client->>User: 6. Display message
 ```
 
-> [!NOTE]
-> the server doesn't know any implementation details of frontend tools. it only knows:
-> 1. tool names and description ([here](#client-registration))
-> 2. parameters schemas
-> 3. when to request tool execution
-
 When you send a message to change the console text color:
-1. The client relays the message to the server via HTTP (`RunStreamingAsync`)
-2. The server requests tool execution from the client
-3. the client calls `SetTextColor` with the appropriate arguments from the server 
-4. the client sends result back to server as `FunctionResultContent`
-5. the server incorporates the result into the agent response and streams it back to the client via SSE
-6. the client display it to you
+1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
+2. The server sends the tool call request to the client.
+3. The client executes `SetTextColor` with arguments provided by the server.
+4. The client returns the result of `SetTextColor` to the server as `FunctionResultContent`.
+5. The server incorporates the result into the agent response and streams it back to the client via SSE.
+6. The client displays the message to you.
 
+> [!NOTE]
+>
+> The server doesn't know any implementation details of frontend tools. It only knows:
+> 1. Tool names and description ([here](#client-registration))
+> 2. Parameters schemas
+> 3. When to request tool execution

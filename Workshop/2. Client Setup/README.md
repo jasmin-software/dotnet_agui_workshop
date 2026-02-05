@@ -5,8 +5,7 @@
 dotnet new console -o Client
 ```
 
-cd into the directory, and run these to install the required packages
-
+Navigate to the directory, and install the required packages:
 ``` bash
 cd Client
 dotnet add package Microsoft.Agents.AI.AGUI --version 1.0.0-preview.260128.1
@@ -115,7 +114,7 @@ here's an example of the interaction:
 ```mermaid
 sequenceDiagram;
     User->>Client: 0. Send message
-    Client->>Server: 1. RunStreamingAsync()
+    Client->>Server: 1. Start streaming request
     activate Server
     Server->>Client: 2. Stream SSE response
     deactivate Server
@@ -123,6 +122,9 @@ sequenceDiagram;
 ```
 
 When you send a message in the console:
-1. The client relays the message to the server via HTTP (`RunStreamingAsync`)
-2. The server streams the agent response back to the client via SSE
-3. The client displays the response back to you
+1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
+2. The server streams the agent response back to the client via SSE.
+3. The client displays the message to you.
+
+
+

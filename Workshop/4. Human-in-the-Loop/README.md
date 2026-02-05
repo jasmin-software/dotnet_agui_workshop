@@ -136,6 +136,6 @@ When you send a message to generate a text file:
 5. The client converts the user's decision into a `FunctionApprovalResponseContent` and sends it back to the server.
 6. The server sends the tool call request to the client.
 7. The client executes `GenerateTextFile` with arguments provided by the server.
-8. The client sends the result of `GenerateTextFile` back to the server.
+8. The client returns the result of `GenerateTextFile` to the server as `FunctionResultContent`.
 9. The server incorporates the result into the agent response and streams it back to the client via SSE.
 10. The client displays the message to you.
