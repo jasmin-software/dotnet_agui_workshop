@@ -1,10 +1,15 @@
 # Human-in-the-Loop
 
-### Creating tools that requires approval/human in the loop:
+This tutorial shows you how to build **function tools that require human approval**. 
+
+This pattern, known as **human-in-the-loop**, is used whenever an agent needs user input, e.g., to approve or reject an action. When approval is required, the agent run stops and returns a response indicating what input is required. The client is responsible for collecting that input from the user and resuming the agent run with the user’s response.
+
+
+### Creating tools with human-in-the-loop approval
 
 > [!TIP]
 >
-> `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are meant for evaluation and may change or be removed in future updates. They will be highlighted with a warning (similar to a syntax error) in your editor. 
+> `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation and may change or be removed in future updates. They will be highlighted with a warning (similar to a syntax error) in your editor. 
 >
 > To ignore this warning, create an `.editorconfig` file in the project root folder with the following content: 
 >
@@ -14,7 +19,7 @@
 > dotnet_diagnostic.MEAI001.severity = none
 > ```
 
-add this tool to the Program.cs in the client folder:
+Add this tool to the `Program.cs` in the client folder:
 ``` C#
 [Description("Generate a text file with the specified filename and content.")]
 string GenerateTextFile(
@@ -30,21 +35,24 @@ string GenerateTextFile(
 }
 ```
 
-make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction`:
+Make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction`:
 ``` C#
-AIFunction approvalRequiredSendEmailTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail));
+AIFunction approvalRequiredGenerateTextFileTool =
+    new ApprovalRequiredAIFunction(
+        AIFunctionFactory.Create(GenerateTextFile)
+    );
 ```
 
-add the tool to the agent:
+Add the tool to the agent:
 ``` C#
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
     tools: [setTextColorTool, 
-            generateTextFileTool]);
+            approvalRequiredGenerateTextFileTool]);
 ```
 
-create a helper function that handles the approval response:
+Create a helper function that handles the approval response:
 ``` c#
 async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 {
@@ -56,7 +64,7 @@ async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 }
 ```
 
-add this else-if condition to the `AIContent` foreach loop to take care of the function approval:
+Add this `else-if` condition to the `AIContent` foreach loop to take care of the function approval:
 ``` C#
                 else if (content is FunctionApprovalRequestContent request)
                 {
@@ -89,18 +97,26 @@ add this else-if condition to the `AIContent` foreach loop to take care of the f
                 }
 ```
 
-### Using tools with approval:
-run this to start the client again:
+### Using tools with human-in-the-loop approval:
 
-```
+> [!IMPORTANT]
+> Before running the client, ensure the server is running at `http://localhost:5000`.
+>
+> You can do this by running this in the `Server` folder:
+> ```
+> dotnet run --urls http://localhost:5000
+> ```
+
+To start the client, run this in the `Client` folder:
+``` bash
 dotnet run
 ```
 
-And you can simply ask it to create a text file for you
+And you can simply ask it to create a text file for you.
 
 <details>
 <summary>
-here's an example of the interaction:
+Here's an example of the interaction:
 </summary>
 
 ![human-in-the-loop light themed output](./assets/hitl-output-light.png#gh-light-mode-only)
@@ -135,7 +151,7 @@ When you send a message to generate a text file:
 4. The user approves or denies the request.
 5. The client converts the user's decision into a `FunctionApprovalResponseContent` and sends it back to the server.
 6. The server sends the tool call request to the client.
-7. The client executes `GenerateTextFile` with arguments provided by the server.
+7. The client executes `GenerateTextFile` using the arguments provided by the server.
 8. The client returns the result of `GenerateTextFile` to the server as `FunctionResultContent`.
 9. The server incorporates the result into the agent response and streams it back to the client via SSE.
 10. The client displays the message to you.

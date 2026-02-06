@@ -140,7 +140,7 @@ sequenceDiagram;
 When you send a message to change the console text color:
 1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
 2. The server sends the tool call request to the client.
-3. The client executes `SetTextColor` with arguments provided by the server.
+3. The client executes `SetTextColor` using the arguments provided by the server.
 4. The client returns the result of `SetTextColor` to the server as `FunctionResultContent`.
 5. The server incorporates the result into the agent response and streams it back to the client via SSE.
 6. The client displays the message to you.

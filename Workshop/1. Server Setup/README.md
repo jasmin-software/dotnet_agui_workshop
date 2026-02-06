@@ -22,11 +22,11 @@ Install the necessary packages for the server:
 
 ```bash 
 cd ServerAGUI
-dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
 dotnet add package Azure.AI.OpenAI --prerelease
 dotnet add package Azure.Identity
+dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --version 1.0.0-preview.260108.1
+dotnet add package Microsoft.Agents.AI.OpenAI --version 1.0.0-preview.260108.1
 dotnet add package Microsoft.Extensions.AI.OpenAI --prerelease
-dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
 cd ..
 ```
 
