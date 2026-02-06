@@ -6,48 +6,48 @@ Follow these instructions to get a GitHub Personal Access Token (PAT).
 
 The starting point is to visit your GitHub repo at https://github.com/marketplace?type=models to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
 
-![Most Popular](most-popular.png)
+![Most Popular](./assets/most-popular.png)
 
 Click on the `Most Popular` tab.
 
 We will be using the `gpt-4o-mini` model. Scroll down until you find `OpenAO GPT-4o mini`.
 
-![gpt 4o-mini model](gpt-4o-mini-model.png)
+![gpt 4o-mini model](./assets/gpt-4o-mini-model.png)
 
 Selecting the `OpenAI GPT-4o mini` leads you to the page below. 
 
-![use this model](use-this-model.png)
+![use this model](./assets/use-this-model.png)
 
 Click on the `<> Use this model` button.
 
-![Select C#](c-sharp.png)
+![Select C#](./assets/c-sharp.png)
 
 On the dialog that pops up, select `C#`, then click on `Run a basic code sample`.
 
-![model signature](model-signature.png)
+![model signature](./assets/model-signature.png)
 
 On the next dialog, you will see the signature of the model. In our case it is `openai/gpt-4o-mini`.
 
-![configure authentication](configure-auth.png)
+![configure authentication](./assets/configure-auth.png)
 
 Click on `1. Configure authentication`.
 
-![create personal access token](create-pat.png)
+![create personal access token](./assets/create-pat.png)
 
 Next, click on the green `Create Personal Access Token` button.
 
-![verification](verification.png)
+![verification](./assets/verification.png)
 
 You may need to go through a verification process.
 
-![generate token](generate-token.png)
+![generate token](./assets/generate-token.png)
 
 Make selections, then click on `Generate token`.
 
-![confirm](confirm.png)
+![confirm](./assets/confirm.png)
 
 On the next pop-up, click on `Generate token` to confirm.
 
-![copy token](copy-token.png)
+![copy token](./assets/copy-token.png)
 
 Copy the newly generated token and place it is a safe place because you cannot view this token again once you leave this page. 
