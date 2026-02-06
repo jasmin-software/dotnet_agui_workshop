@@ -19,7 +19,7 @@ There's already a backend tool, i.e., `WeatherBackendTool.GetWeather`, defined o
 
 ### Using the backend tool:
 
-In the same console, **ask for the weather** (in a location).
+In the same console, ask the agent for **the weather in any city**.
 
 <details>
 <summary>
@@ -132,7 +132,7 @@ To start the client, run this in the `Client` folder:
 dotnet run
 ```
 
-And ask it to **change the console text color**.
+Now, ask the agent to **change the console text color**.
 
 <details>
 <summary>

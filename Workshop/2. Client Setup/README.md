@@ -2,19 +2,22 @@
 
 The AG-UI client connects to the server and display streaming responses.
 
-### Setting up the client
+### Creating the client
+
+Create a project:
 ``` bash
 dotnet new console -o Client
 ```
 
-Navigate to the directory, and install the required packages:
+Install the required packages in the project file:
 ``` bash
 cd Client
 dotnet add package Microsoft.Agents.AI.AGUI --version 1.0.0-preview.260128.1
 dotnet add package Microsoft.Agents.AI --version 1.0.0-preview.260128.1
+cd ..
 ```
 
-replaced Program.cs with this
+Replaced `Program.cs` with this:
 ``` C#
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
@@ -99,10 +102,12 @@ To start the client, run this in the `Client` folder:
 dotnet run
 ```
 
+And, ask the agent anything!
+
 <details>
 
 <summary>
-here's an example of the interaction:
+Here's an example of the interaction:
 </summary>
 
 ![output dark themed](./assets/output-dark.png#gh-dark-mode-only)
