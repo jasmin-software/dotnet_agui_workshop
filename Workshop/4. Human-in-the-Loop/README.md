@@ -1,11 +1,13 @@
 # Human-in-the-Loop
 
-This tutorial shows you how to build **function tools that require human approval**. 
+This tutorial shows you how to add  **function tools that require human approval** to your AG-UI agents. 
 
-This pattern, known as **human-in-the-loop**, is used whenever an agent needs user input, e.g., to approve or reject an action. When approval is required, the agent run stops and returns a response indicating what input is required. The client is responsible for collecting that input from the user and resuming the agent run with the user’s response.
+This pattern, known as **human-in-the-loop**, is used whenever an agent needs user input, e.g., to approve or reject an action. 
+
+When approval is required, the agent run stops and returns a response indicating what input is required. The client is responsible for collecting that input from the user and resuming the agent run with the user’s response.
 
 
-### Creating tools with human-in-the-loop approval
+### Creating a tool with human-in-the-loop approval
 
 > [!TIP]
 >
@@ -97,7 +99,7 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
                 }
 ```
 
-### Using tools with human-in-the-loop approval:
+### Using the tool with human-in-the-loop approval:
 
 > [!IMPORTANT]
 > Before running the client, ensure the server is running at `http://localhost:5000`.

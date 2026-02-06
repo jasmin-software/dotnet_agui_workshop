@@ -1,18 +1,29 @@
 # Tools
 
+This tutorial shows you how to add **function tools** to your AG-UI agents. 
+
+Function tools are custom C# methods that an agent can call to perform specific tasks, e.g., retrieving data, interacting with external systems, or performing UI-related actions.
+
+Tools are split into **backend tools** and **frontend tools**, depending on where they are defined.
+
 ## Backend tools
 
-### Creating backend tools:
+Backend tools are defined and executed on the **server**.
 
-There's already a backend tool (that gets the weather) defined on the server. 
+The agent decides when to call these tools, and their results are executed on the server and the results are automatically streamed back to the client. Backend tools are ideal for data access, server-side logic, and interacting with external systems.
 
-### Calling backend tools:
+### Creating a backend tool:
+
+There's already a backend tool, i.e., `WeatherBackendTool.GetWeather`, defined on the server.
+
+
+### Using the backend tool:
 
 You can simply ask for the weather in the same console to call it.
 
 <details>
 <summary>
-here's an example of the interaction:
+Here's an example of the interaction:
 </summary>
 
 ![backend dark output](./assets/backend-dark.png#gh-dark-mode-only)
@@ -43,9 +54,13 @@ When you send a message to get the weather for a location:
 
 ## Frontend tools
 
-### Creating frontend tools:
+Frontend tools are defined and executed on the **client**.
 
-add this tool to the Program.cs in the client folder:
+The agent decides when to call these tools, but their execution happens entirely on the client. Frontend tools are ideal for UI operations, client-specific data, and interactions with the local system.
+
+### Creating a frontend tool
+
+Add this tool to the Program.cs in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
 void SetTextColor(string color)
@@ -62,7 +77,7 @@ void SetTextColor(string color)
 }
 ```
 
-make it an `AIFunction`:
+Make it an `AIFunction`:
 ``` C#
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
@@ -75,7 +90,7 @@ AIAgent agent = chatClient.AsAIAgent(
     tools: [setTextColorTool]);
 ```
 
-add instruction for the agent when using the client tool:
+Add instruction for the agent when using the client tool:
 ``` C#
 List<ChatMessage> messages =
 [
@@ -83,7 +98,7 @@ List<ChatMessage> messages =
 ];
 ```
 
-add these two else-if conditions to the `AIContent` foreach loop so you'd know when the function is called, what arguments are passed in, and what result the function return:
+Add these two else-if conditions to the `AIContent` foreach loop so you can see when the function is called, what arguments are passed in, and what result the function returns:
 ``` C#
                 else if (content is FunctionCallContent functionCallContent)
                 {                    
@@ -102,9 +117,17 @@ add these two else-if conditions to the `AIContent` foreach loop so you'd know w
                     Console.ForegroundColor = currentTextColor;
                 }      
 ```
-### Calling frontend tools:
+### Using the frontend tool
 
-run this to start the client again
+> [!IMPORTANT]
+> Before running the client, ensure the server is running at `http://localhost:5000`.
+>
+> You can do this by running this in the `Server` folder:
+> ```
+> dotnet run --urls http://localhost:5000
+> ```
+
+To start the client, run this in the `Client` folder:
 ``` bash
 dotnet run
 ```
@@ -113,7 +136,7 @@ And you can simply ask for it to change the console foreground color.
 
 <details>
 <summary>
-here's an example of the interaction:
+Here's an example of the interaction:
 </summary>
 
 ![frontend dark output](./assets/frontend-dark.png#gh-dark-mode-only)
@@ -130,7 +153,7 @@ sequenceDiagram;
    Client->>Server: 1. Start streaming request
    activate Server
    Server->>Client: 2. Request to call SetTextColor
-   Note left of Client: 3. Executes SetTextColor
+   Note left of Client: 3. Execute SetTextColor
    Client->>Server: 4. Return result
    Server->>Client: 5. Stream SSE response
    deactivate Server
@@ -147,7 +170,7 @@ When you send a message to change the console text color:
 
 > [!NOTE]
 >
-> The server doesn't know any implementation details of frontend tools. It only knows:
+> The server does not know any implementation details of frontend tools. It only knows:
 > 1. Tool names and description ([here](#client-registration))
 > 2. Parameters schemas
 > 3. When to request tool execution
