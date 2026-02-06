@@ -114,7 +114,7 @@ To start the client, run this in the `Client` folder:
 dotnet run
 ```
 
-And you can simply ask it to create a text file for you.
+And ask it to **create a text file**.
 
 <details>
 <summary>

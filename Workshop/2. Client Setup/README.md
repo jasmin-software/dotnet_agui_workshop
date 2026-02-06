@@ -1,5 +1,7 @@
 # Client Setup
 
+The AG-UI client connects to the server and display streaming responses.
+
 ### Setting up the client
 ``` bash
 dotnet new console -o Client

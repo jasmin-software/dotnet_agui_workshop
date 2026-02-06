@@ -19,7 +19,7 @@ There's already a backend tool, i.e., `WeatherBackendTool.GetWeather`, defined o
 
 ### Using the backend tool:
 
-You can simply ask for the weather in the same console to call it.
+In the same console, **ask for the weather** (in a location).
 
 <details>
 <summary>
@@ -132,7 +132,7 @@ To start the client, run this in the `Client` folder:
 dotnet run
 ```
 
-And you can simply ask for it to change the console foreground color.
+And ask it to **change the console text color**.
 
 <details>
 <summary>
