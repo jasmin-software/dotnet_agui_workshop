@@ -91,7 +91,7 @@ AITool[] tools =
 ];
 
 // Create AI agent
-AIAgent agent = new OpenAIClient(
+var agent = new OpenAIClient(
     new ApiKeyCredential(apiKey!),
     new OpenAIClientOptions()
     {
