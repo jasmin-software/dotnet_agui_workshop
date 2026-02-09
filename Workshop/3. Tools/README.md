@@ -67,7 +67,7 @@ void SetTextColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
-        currentColor = parsedColor;
+        currentTextColor = parsedColor;
         Console.ForegroundColor = parsedColor;
     }
     else
