@@ -60,7 +60,7 @@ The agent decides when to call these tools, but their execution happens entirely
 
 ### Creating a frontend tool
 
-Add this tool to the Program.cs in the client folder:
+Add this tool to the _Program.cs_ in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
 void SetTextColor(string color)
