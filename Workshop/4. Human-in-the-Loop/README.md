@@ -76,14 +76,14 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
                         var approvalMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(true)]);
                         Console.ForegroundColor = ConsoleColor.Green;
                         await HandleFunctionApprovalResponse(agent, approvalMessage);
-                        Console.ForegroundColor = currentColor;
+                        Console.ForegroundColor = currentTextColor;
                     }
                     else if (input == "deny" || input == "d" || input == "no" || input == "n")
                     {
                         var denialMessage = new ChatMessage(ChatRole.User, [request.CreateResponse(false)]);
                         Console.ForegroundColor = ConsoleColor.Red;
                         await HandleFunctionApprovalResponse(agent, denialMessage);
-                        Console.ForegroundColor = currentColor;
+                        Console.ForegroundColor = currentTextColor;
                     }
                     else
                     {
@@ -93,7 +93,7 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
                         );
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine($"\nPlease confirm that you'd like to send the email with the following details:\n{argsJson}");
-                        Console.ForegroundColor = currentColor;
+                        Console.ForegroundColor = currentTextColor;
                         awaitingApproval = true;
                     }
                 }
