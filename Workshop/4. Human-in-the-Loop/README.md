@@ -92,7 +92,7 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
                             new JsonSerializerOptions { WriteIndented = true }
                         );
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine($"\nPlease confirm that you'd like to send the email with the following details:\n{argsJson}");
+                        Console.WriteLine($"\nPlease confirm that you'd like to create the text file with the following details:\n{argsJson}");
                         Console.ForegroundColor = currentTextColor;
                         awaitingApproval = true;
                     }
