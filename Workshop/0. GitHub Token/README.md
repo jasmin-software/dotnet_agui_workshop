@@ -4,10 +4,12 @@ You will need to use an AI Model in order to build the AG-UI server. In today's 
 
 Follow these instructions to get a GitHub Personal Access Token (PAT).
 
-The starting point is to visit your GitHub repo at https://github.com/marketplace?type=models to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
+### Starting Point
+Visit GitHub at https://github.com/marketplace?type=models to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
 
 ![Most Popular](./assets/most-popular.png)
 
+### Select Model
 Click on the `Most Popular` tab.
 
 We will be using the `gpt-4o-mini` model. Scroll down until you find `OpenAO GPT-4o mini`.
@@ -22,18 +24,22 @@ Click on the `<> Use this model` button.
 
 ![Select C#](./assets/c-sharp.png)
 
-On the dialog that pops up, select `C#`, then click on `Run a basic code sample`.
+### Select Language
+Once the dialog pops up, select `C#`, then click on `3. Run a basic code sample`.
 
 ![model signature](./assets/model-signature.png)
 
+### Find Model Signature
 On the next dialog, you will see the signature of the model. In our case it is `openai/gpt-4o-mini`.
 
 ![configure authentication](./assets/configure-auth.png)
 
+### Configure authentication
 Click on `1. Configure authentication`.
 
 ![create personal access token](./assets/create-pat.png)
 
+### Create Personal Access Token
 Next, click on the green `Create Personal Access Token` button.
 
 ![verification](./assets/verification.png)
@@ -46,8 +52,10 @@ Make selections, then click on `Generate token`.
 
 ![confirm](./assets/confirm.png)
 
+### Generate token
 On the next pop-up, click on `Generate token` to confirm.
 
 ![copy token](./assets/copy-token.png)
 
+### Save token
 Copy the newly generated token and place it is a safe place because you cannot view this token again once you leave this page. 
