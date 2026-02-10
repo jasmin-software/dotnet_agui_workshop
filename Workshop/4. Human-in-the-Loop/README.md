@@ -54,7 +54,7 @@ AIAgent agent = chatClient.CreateAIAgent(
             approvalRequiredGenerateTextFileTool]);
 ```
 
-Create a helper function that handles the approval response:
+Create a helper method that handles the approval response:
 ``` c#
 async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 {
