@@ -1,4 +1,8 @@
-# Creating an AG-UI Server
+# Server Setup
+
+The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP.NET Core.
+
+### Creating the server
 
 From a working directory inside of a terminal window, create a web app named _ServerAGUI_ with the following command:
 
@@ -13,8 +17,6 @@ mkdir Tools
 cd ..
 dotnet new gitignore
 ```
-
-The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP.NET Core.
 
 **Required Packages**
 
@@ -42,13 +44,15 @@ Add the following JSON to _appsettings.Development.json_ file:
 }
 ```
 
-*NOTE*: Replace _put-your-github-personal-access-token-here_ with your GitHub Personal Access Token. 
+> [!NOTE]
+>
+> Replace _put-your-github-personal-access-token-here_ with your GitHub Personal Access Token. 
 
 Edit the _.gitignore_ file in the _AGUI_ folder and add to it _appsettings.Development.json_ so that your secrets do not find their way into source control by mistake.
 
 We will add a simple weather tool that returns a static weather report. Of course, you can replace the tool with one that connects to a weather API and returns real weather related forecast data. 
 
-In the _ServerAGUI/Tools_ folder, add a C# class named _WeatherBackendTool.cs_ with this code:
+In the `ServerAGUI/Tools` folder, add a C# class named `WeatherBackendTool.cs` with this code:
 
 ```C#
 using System.ComponentModel;
@@ -66,7 +70,7 @@ internal static class WeatherBackendTool
 }
 ```
 
-In _Program.cs_, add this code right before statement ``var app = builder.Build();``:
+In `Program.cs`, add this code right before statement ``var app = builder.Build();``:
 
 ```C#
 builder.Services.AddHttpClient().AddLogging();
@@ -112,3 +116,10 @@ app.MapAGUI("/", agent);
 ```
 
 This is it, folks. We now have an AG-UI server that we will later connect to from a variety of clients.
+
+### Running the server
+
+To start the serverm run this in the `ServerAGUI` folder:
+```
+dotnet run --urls http://localhost:5000
+```
