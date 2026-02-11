@@ -63,12 +63,13 @@ The agent decides when to call these tools, but their execution happens entirely
 Add this tool to the `Program.cs` in the client folder:
 ``` C#
 [Description("Change the console foreground color into the specified color.")]
-void SetTextColor(string color)
+string SetTextColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
         currentTextColor = parsedColor;
         Console.ForegroundColor = parsedColor;
+        return $"Console text color changed to {parsedColor}.";
     }
     else
     {

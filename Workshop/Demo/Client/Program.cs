@@ -8,10 +8,7 @@ string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "htt
 Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
-AIFunction approvalRequiredGenerateTextFileTool =
-    new ApprovalRequiredAIFunction(
-        AIFunctionFactory.Create(GenerateTextFile)
-    );
+AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(GenerateTextFile));
 
 // Create the AG-UI client agent
 using HttpClient httpClient = new()
@@ -121,22 +118,14 @@ catch (Exception ex)
     Console.WriteLine($"\nAn error occurred: {ex.Message}");
 }
 
-async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
-{
-    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(message))
-    {
-        Console.Write(update.Text);
-    }
-    awaitingApproval = false;
-}
-
 [Description("Change the console foreground color into the specified color.")]
-void SetTextColor(string color)
+string SetTextColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
         currentTextColor = parsedColor;
         Console.ForegroundColor = parsedColor;
+        return $"Console text color changed to {parsedColor}.";
     }
     else
     {
@@ -155,4 +144,13 @@ string GenerateTextFile(
     File.WriteAllText(filePath, content);
 
     return $"File written to: {filePath}";
+}
+
+async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
+{
+    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(message))
+    {
+        Console.Write(update.Text);
+    }
+    awaitingApproval = false;
 }

@@ -20,9 +20,8 @@ AGUIChatClient chatClient = new(httpClient, serverUrl);
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
-    tools: [
-        setTextColorTool,
-        generateTextFileTool]);
+    tools: [setTextColorTool,
+            generateTextFileTool]);
 
 List<ChatMessage> messages =
 [

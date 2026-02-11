@@ -39,10 +39,7 @@ string GenerateTextFile(
 
 Make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction`:
 ``` C#
-AIFunction approvalRequiredGenerateTextFileTool =
-    new ApprovalRequiredAIFunction(
-        AIFunctionFactory.Create(GenerateTextFile)
-    );
+AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(GenerateTextFile));
 ```
 
 Add the tool to the agent:
