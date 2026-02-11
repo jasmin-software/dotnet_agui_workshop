@@ -49,7 +49,7 @@ By the end of this step, you will have:
 
 ## [4. Human-in-the-Loop](./4.%20Human-in-the-Loop/README.md)
 
-**Add function tools that require human approval before your agent executes certain tasks.**
+**Add function tools that require human approval before your agent can execute them.**
 
 Human-in-the-loop keeps humans in control of high-impact or sensitive actions.
 
