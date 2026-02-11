@@ -82,7 +82,7 @@ Make it an `AIFunction`:
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
-<a name="client-registration">add the tool to the agent</a>:
+<a name="client-registration">Add tool to the agent</a>:
 ``` C#
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
