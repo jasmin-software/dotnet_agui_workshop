@@ -119,7 +119,7 @@ This is it, folks. We now have an AG-UI server that we will later connect to fro
 
 ### Running the server
 
-To start the serverm run this in the `Server` folder:
+To start the server, run this in the `Server` folder:
 ```
 dotnet run --urls http://localhost:5000
 ```
