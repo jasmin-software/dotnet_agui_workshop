@@ -115,7 +115,7 @@ Add these two else-if conditions to the `AIContent` foreach loop so you can see 
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"\n[Function Result: {functionResultContent.Result}]");
                     Console.ForegroundColor = currentTextColor;
-                }      
+                }
 ```
 ### Using the frontend tool
 
