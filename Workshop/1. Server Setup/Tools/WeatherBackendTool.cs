@@ -8,7 +8,7 @@ namespace Server.Tools
         public static string GetWeather(string location)
         {
             // In a real implementation, this would call a weather API.
-            return $"The weather in {location} is sunny with a high of 20°C.";
+            return $"The weather in {location} is sunny with a high of 25°C.";
         }
     }
 }

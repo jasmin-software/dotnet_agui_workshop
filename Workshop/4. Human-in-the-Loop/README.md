@@ -109,10 +109,13 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
 > dotnet run --urls http://localhost:5000
 > ```
 
-To start the client, run this in the `Client` folder:
-``` bash
-dotnet run
-```
+Quit and start the client again.
+> To quit, type `:q` in the console.
+> 
+> Then, run this in the `Client` folder to start it again:
+> ``` bash
+> dotnet run
+> ```
 
 Now, ask the agent to **create a text file**.
 

@@ -7,6 +7,7 @@ The AG-UI client connects to the server and display streaming responses.
 Create a project:
 ``` bash
 dotnet new console -o Client
+dotnet sln add ./Client/Client.csproj
 ```
 
 Install the required packages in the project file:
@@ -97,10 +98,11 @@ catch (Exception ex)
 > dotnet run --urls http://localhost:5000
 > ```
 
-To start the client, run this in the `Client` folder:
-``` bash
-dotnet run
-```
+Start the client.
+> Run this in the `Client` folder to start it:
+> ``` bash
+> dotnet run
+> ```
 
 And, ask the agent anything!
 
