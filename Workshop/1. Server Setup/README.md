@@ -4,15 +4,15 @@ The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP
 
 ### Creating the server
 
-From a working directory inside of a terminal window, create a web app named _ServerAGUI_ with the following command:
+From a working directory inside of a terminal window, create a web app named _Server_ with the following command:
 
 ```bash
 mkdir AGUI
 cd AGUI
 dotnet new sln
-dotnet new web -n ServerAGUI
-dotnet sln add ./ServerAGUI/ServerAGUI.csproj
-cd ServerAGUI
+dotnet new web -n Server
+dotnet sln add ./Server/Server.csproj
+cd Server
 mkdir Tools
 cd ..
 dotnet new gitignore
@@ -23,7 +23,7 @@ dotnet new gitignore
 Install the necessary packages for the server:
 
 ```bash 
-cd ServerAGUI
+cd Server
 dotnet add package Azure.AI.OpenAI --version 2.8.0-beta.1
 dotnet add package Azure.Identity --version 1.17.1
 dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --version 1.0.0-preview.260108.1
@@ -52,12 +52,12 @@ Edit the _.gitignore_ file in the _AGUI_ folder and add to it _appsettings.Devel
 
 We will add a simple weather tool that returns a static weather report. Of course, you can replace the tool with one that connects to a weather API and returns real weather related forecast data. 
 
-In the `ServerAGUI/Tools` folder, add a C# class named `WeatherBackendTool.cs` with this code:
+In the `Server/Tools` folder, add a C# class named `WeatherBackendTool.cs` with this code:
 
 ```C#
 using System.ComponentModel;
 
-namespace ServerAGUI.Tools;
+namespace Server.Tools;
 
 internal static class WeatherBackendTool
 {
@@ -119,7 +119,7 @@ This is it, folks. We now have an AG-UI server that we will later connect to fro
 
 ### Running the server
 
-To start the serverm run this in the `ServerAGUI` folder:
+To start the serverm run this in the `Server` folder:
 ```
 dotnet run --urls http://localhost:5000
 ```
