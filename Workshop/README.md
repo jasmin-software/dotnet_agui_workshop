@@ -4,7 +4,7 @@
 
 **Create a GitHub Personal Access Token (PAT).**
 
-We will use an AI model hosted on [GitHub Models](https://github.com/marketplace?type=models). We need a PAT so that your server can authenticate and make requests to the model API.
+We will use an AI model hosted on GitHub. Your AG-UI server needs a PAT to authenticate with GitHub and make requests to the model API.
 
 ### Goal
 By the end of this step, you will have:
