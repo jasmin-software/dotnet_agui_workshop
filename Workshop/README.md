@@ -37,7 +37,7 @@ By the end of this step, you will have:
 
 ## [3. Tools](./3.%20Tools/README.md) 
 
-**Add function tools to your agent so it can perform specific tasks.**
+**Add function tools your agent can call to perform specific tasks.**
 
 Tools allow agents to do more than generate text — they can act on systems and UIs.
 
@@ -49,7 +49,7 @@ By the end of this step, you will have:
 
 ## [4. Human-in-the-Loop](./4.%20Human-in-the-Loop/README.md)
 
-**Add function tools that require human approval before the agent executes certain actions.**
+**Add function tools that require human approval before your agent executes certain tasks.**
 
 Human-in-the-loop keeps humans in control of high-impact or sensitive actions.
 
