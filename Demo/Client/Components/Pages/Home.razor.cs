@@ -1,4 +1,4 @@
-using Client;
+using Markdig;
 using Microsoft.Extensions.AI;
 
 namespace Client.Components.Pages;
@@ -44,6 +44,11 @@ public partial class Home(AgentCollection agentCollection)
                 }
             }
         }
+    }
+
+    private string RenderMarkdown(string markdown)
+    {
+        return Markdown.ToHtml(markdown);
     }
 
     public class ChatMessage
