@@ -1,0 +1,26 @@
+﻿@page "/"
+@namespace Client.Components.Pages
+@rendermode InteractiveServer
+
+<div style="background-color: @(Color ?? "white")">
+    <div class="chat-container">
+        <div class="messages">
+            @foreach (var message in Messages)
+            {
+                <div class="message-row @(message.IsUser ? "user" : "bot")">
+                    <div class="bubble">
+                        @message.Text
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="input-bar">
+            <input @bind="CurrentMessage"
+                @bind:event="oninput"
+                placeholder="Type a message..."
+                class="chat-input" />
+            <input type="button" @onclick="SendMessage" value="Send" />
+        </div>
+    </div>
+</div>
