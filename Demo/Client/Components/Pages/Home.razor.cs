@@ -1,15 +1,20 @@
+using System.Text.Json;
 using Markdig;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+
 
 namespace Client.Components.Pages;
 
 public partial class Home(AgentCollection agentCollection)
 {
     private string CurrentMessage = "";
-     private List<ChatMessage> Messages = new();
+     private List<ChatText> Messages = new();
     public static string? Color { get; set; }
+    private bool awaitingApproval = false;
+    private FunctionApprovalRequestContent? awaitingRequest;
 
-    public class ChatMessage
+    public class ChatText
     {
         public required string Text { get; set; }
         public bool IsUser { get; set; }
@@ -19,7 +24,7 @@ public partial class Home(AgentCollection agentCollection)
     {
         if (!string.IsNullOrWhiteSpace(CurrentMessage))
         {
-            var userMessage = new ChatMessage
+            var userMessage = new ChatText
             {
                 Text = CurrentMessage,
                 IsUser = true
@@ -30,13 +35,28 @@ public partial class Home(AgentCollection agentCollection)
             var userText = CurrentMessage;
             CurrentMessage = "";
 
-            Messages.Add(new ChatMessage
+            if (awaitingApproval && awaitingRequest != null)
+            {
+                var input = userText.Trim().ToLowerInvariant();
+                if (input == "approve" || input == "a" || input == "yes" || input == "y")
+                {
+                    var approvalMessage = new ChatMessage(ChatRole.User, [awaitingRequest!.CreateResponse(true)]);
+                    await HandleFunctionApprovalResponse(approvalMessage);
+                }
+                else if (input == "deny" || input == "d" || input == "no" || input == "n")
+                {
+                    var denialMessage = new ChatMessage(ChatRole.User, [awaitingRequest!.CreateResponse(false)]);
+                    await HandleFunctionApprovalResponse(denialMessage);
+                }
+                return;
+            }
+
+            Messages.Add(new ChatText
             {
                 Text = "",
                 IsUser = false
             });
 
-            // Simulate async bot reply
             await foreach (var update in agentCollection.AssistantAgent.RunStreamingAsync(userText))
             {
                 foreach (var content in update.Contents)
@@ -46,6 +66,20 @@ public partial class Home(AgentCollection agentCollection)
                         Messages.Last().Text += textContent.Text;
                         StateHasChanged();
                     }
+                    else if (content is FunctionApprovalRequestContent request)
+                    {
+                        var input = userText.Trim().ToLowerInvariant();
+                        
+                        var argsJson = JsonSerializer.Serialize(
+                            request.FunctionCall.Arguments,
+                            new JsonSerializerOptions { WriteIndented = true }
+                        );
+                        Messages.Last().Text = $"\nPlease confirm that you'd like to create the text file with the following details:\n{argsJson}"; //TODO: Format it nicer
+                        StateHasChanged();
+                        awaitingApproval = true;
+                        awaitingRequest = request;
+                    }
+                    
                 }
             }
         }
@@ -54,5 +88,20 @@ public partial class Home(AgentCollection agentCollection)
     private string RenderMarkdown(string markdown)
     {
         return Markdown.ToHtml(markdown);
+    }
+
+    async Task HandleFunctionApprovalResponse(ChatMessage message)
+    {
+        Messages.Add(new ChatText
+        {
+            Text = "",
+            IsUser = false
+        });
+        await foreach (var update in agentCollection.AssistantAgent.RunStreamingAsync(message))
+        {
+            Messages.Last().Text += update.Text;
+            StateHasChanged();
+        }
+        awaitingApproval = false;
     }
 }

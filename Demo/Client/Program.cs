@@ -11,8 +11,10 @@ HttpClient httpClient = new();
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:5000";
 
 AIFunction setBackgroundColorTool = AIFunctionFactory.Create(UserInterfaceTool.ChangeBackgroundColor);
+AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(UserInterfaceTool.GenerateTextFile));
 
-ChatClientAgent assistantAgent = new AGUIChatClient(httpClient, $"{serverUrl}/assistant").CreateAIAgent(tools: [setBackgroundColorTool]);
+ChatClientAgent assistantAgent = new AGUIChatClient(httpClient, $"{serverUrl}/assistant").CreateAIAgent(
+    tools: [setBackgroundColorTool, approvalRequiredGenerateTextFileTool]);
 ChatClientAgent representativeAgent = new AGUIChatClient(httpClient, $"{serverUrl}/rep").CreateAIAgent();
 
 // Add services to the container.
