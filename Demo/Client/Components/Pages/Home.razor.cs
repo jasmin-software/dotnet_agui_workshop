@@ -5,10 +5,15 @@ namespace Client.Components.Pages;
 
 public partial class Home(AgentCollection agentCollection)
 {
-
     private string CurrentMessage = "";
      private List<ChatMessage> Messages = new();
-    public string? Color { get; set; }
+    public static string? Color { get; set; }
+
+    public class ChatMessage
+    {
+        public required string Text { get; set; }
+        public bool IsUser { get; set; }
+    }
 
     private async Task SendMessage()
     {
@@ -49,11 +54,5 @@ public partial class Home(AgentCollection agentCollection)
     private string RenderMarkdown(string markdown)
     {
         return Markdown.ToHtml(markdown);
-    }
-
-    public class ChatMessage
-    {
-        public required string Text { get; set; }
-        public bool IsUser { get; set; }
     }
 }

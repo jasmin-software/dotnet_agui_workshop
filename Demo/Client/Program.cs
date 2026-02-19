@@ -1,5 +1,6 @@
 using Client;
 using Client.Components;
+using Client.Tools;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
@@ -9,9 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 HttpClient httpClient = new();
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:5000";
 
-ChatClientAgent assistantAgent = new AGUIChatClient(httpClient, $"{serverUrl}/assistant").CreateAIAgent();//tools: [AIFunctionFactory.Create(ChangeColor)]);
-ChatClientAgent representativeAgent = new AGUIChatClient(httpClient, $"{serverUrl}/rep").CreateAIAgent();
+AIFunction setBackgroundColorTool = AIFunctionFactory.Create(UserInterfaceTool.ChangeBackgroundColor);
 
+ChatClientAgent assistantAgent = new AGUIChatClient(httpClient, $"{serverUrl}/assistant").CreateAIAgent(tools: [setBackgroundColorTool]);
+ChatClientAgent representativeAgent = new AGUIChatClient(httpClient, $"{serverUrl}/rep").CreateAIAgent();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
