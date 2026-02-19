@@ -60,15 +60,15 @@ The agent decides when to call these tools, but their execution happens entirely
 
 ### Creating a frontend tool
 
-Add this tool to the `Program.cs` in the client folder:
+Add this tool to change the console text color to `Program.cs` in the `Client` folder:
 ``` C#
-[Description("Change the console foreground color into the specified color.")]
+[Description("Change the console text color into the specified color.")]
 string SetTextColor(string color)
 {
     if (Enum.TryParse<ConsoleColor>(color, out var parsedColor))
     {
-        currentTextColor = parsedColor;
         Console.ForegroundColor = parsedColor;
+        currentTextColor = parsedColor;
         return $"Console text color changed to {parsedColor}.";
     }
     else
@@ -78,12 +78,12 @@ string SetTextColor(string color)
 }
 ```
 
-Make it an `AIFunction`:
+Make it an `AIFunction` somewhere before the agent is declared::
 ``` C#
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
-<a name="client-registration">Add tool to the agent</a>:
+Then, <a name="client-registration">add the tool to the agent</a>:
 ``` C#
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",

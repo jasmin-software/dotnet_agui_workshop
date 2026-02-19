@@ -21,7 +21,7 @@ When approval is required, the agent run stops and returns a response indicating
 > dotnet_diagnostic.MEAI001.severity = none
 > ```
 
-Add this tool to the `Program.cs` in the client folder:
+Add this tool to generate a text file to `Program.cs` in the `Client` folder:
 ``` C#
 [Description("Generate a text file with the specified filename and content.")]
 string GenerateTextFile(
@@ -37,12 +37,12 @@ string GenerateTextFile(
 }
 ```
 
-Make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction`:
+Make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction` somewhere before the agent is declared:
 ``` C#
 AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(GenerateTextFile));
 ```
 
-Add the tool to the agent:
+Then, add the tool to the agent:
 ``` C#
 AIAgent agent = chatClient.CreateAIAgent(
     name: "agui-client",

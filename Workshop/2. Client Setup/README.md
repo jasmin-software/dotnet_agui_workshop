@@ -10,7 +10,8 @@ dotnet new console -o Client
 dotnet sln add ./Client/Client.csproj
 ```
 
-Install the required packages in the project file:
+Install the required packages for the client:
+
 ``` bash
 cd Client
 dotnet add package Microsoft.Agents.AI.AGUI --version 1.0.0-preview.260128.1

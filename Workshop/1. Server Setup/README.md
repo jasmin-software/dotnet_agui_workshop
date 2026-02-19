@@ -18,8 +18,6 @@ cd ..
 dotnet new gitignore
 ```
 
-**Required Packages**
-
 Install the necessary packages for the server:
 
 ```bash 
@@ -70,14 +68,13 @@ internal static class WeatherBackendTool
 }
 ```
 
-In `Program.cs`, add this code right before statement ``var app = builder.Build();``:
-
+To use the features in AGUI, we need to register HttpClient and AGUI. Add these 2 lines right before `var app = builder.Build();` in `Program.cs`:
 ```C#
 builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUI();
 ```
 
-To read environment variables: add this code below statement ``var app = builder.Build();``:
+To read environment variables, add this block of code before `var app = builder.Build();` in `Program.cs`:
 
 ```C#
 string? apiKey = builder.Configuration["GitHub:Token"];
@@ -85,10 +82,10 @@ string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://model
 string? deploymentName = builder.Configuration["GitHub:Model"] ?? "openai/gpt-4o-mini";
 ```
 
-Right below the above code, add the following code that registers our weather tool and creates an agent named _Socrates_ who is a motivational speaker:
+Right after reading the environment variable, add the following code that registers our weather tool and creates an agent named _Socrates_ who is a wise motivational assistant:
 
 ```C#
-// Create AI agent
+// Create backend tool
 AITool[] tools =
 [
     AIFunctionFactory.Create(WeatherBackendTool.GetWeather)
@@ -103,7 +100,7 @@ var agent = new OpenAIClient(
     })
     .GetChatClient(deploymentName)
     .CreateAIAgent(
-        instructions: "You're a wise motivational speaker.",
+        instructions: "You're a wise motivational assistant.",
         name: "Socrates",
         tools: tools);
 ```

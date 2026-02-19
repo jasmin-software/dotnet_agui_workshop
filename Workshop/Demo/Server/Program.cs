@@ -30,7 +30,7 @@ var agent = new OpenAIClient(
     })
     .GetChatClient(deploymentName)
     .CreateAIAgent(
-        instructions: "You're a wise motivational speaker.",
+        instructions: "You're a wise motivational assistant.",
         name: "Socrates",
         tools: tools);
 
