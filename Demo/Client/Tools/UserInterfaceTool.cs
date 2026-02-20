@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using Client.Components.Pages;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace Client.Tools
 {
@@ -12,7 +14,7 @@ namespace Client.Tools
             return Task.CompletedTask;
         }
 
-        [Description("Generate a text file with the specified filename and content.")]
+        [Description("Generate a text file with the specified filename and content, and return the URL to the generated file.")]
         public static string GenerateTextFile(
             [Description("The filename to generate")] string filename,
             [Description("The content to write to the file")] string content)
@@ -24,7 +26,7 @@ namespace Client.Tools
 
             File.WriteAllText(filePath, content);
 
-            return $"/output/{filename}"; //sandbox:/output/friend_request.txt
+            return $"/output/{filename}";
         }
     }
 }

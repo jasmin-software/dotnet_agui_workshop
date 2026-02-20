@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Markdig;
-using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
 
@@ -68,13 +67,16 @@ public partial class Home(AgentCollection agentCollection)
                     }
                     else if (content is FunctionApprovalRequestContent request)
                     {
-                        var input = userText.Trim().ToLowerInvariant();
+                        // var input = userText.Trim().ToLowerInvariant();
                         
-                        var argsJson = JsonSerializer.Serialize(
-                            request.FunctionCall.Arguments,
-                            new JsonSerializerOptions { WriteIndented = true }
-                        );
-                        Messages.Last().Text = $"\nPlease confirm that you'd like to create the text file with the following details:\n{argsJson}"; //TODO: Format it nicer
+                        // var argsJson = JsonSerializer.Serialize(
+                        //     request.FunctionCall.Arguments,
+                        //     new JsonSerializerOptions { WriteIndented = true }
+                        // );
+                        request.FunctionCall.Arguments!.TryGetValue("filename", out var filename);
+                        request.FunctionCall.Arguments!.TryGetValue("content", out var generatedContent);
+                        var msg2 = $"**Please confirm that you'd like to create the text file with the following details:**\n\nFilename:{filename}\n\nContent:\n\n{generatedContent}\n\nReply **approve** to proceed or **deny** to reject.";
+                        Messages.Last().Text = msg2;
                         StateHasChanged();
                         awaitingApproval = true;
                         awaitingRequest = request;
