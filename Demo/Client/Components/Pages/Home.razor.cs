@@ -17,6 +17,7 @@ public partial class Home(AgentCollection agentCollection)
     {
         public required string Text { get; set; }
         public bool IsUser { get; set; }
+        public bool IsApprovalRequest { get; set; }
     }
 
     private async Task SendMessage()
@@ -56,6 +57,8 @@ public partial class Home(AgentCollection agentCollection)
                 IsUser = false
             });
 
+            // await Task.Delay(300);
+
             await foreach (var update in agentCollection.AssistantAgent.RunStreamingAsync(userText))
             {
                 foreach (var content in update.Contents)
@@ -67,16 +70,11 @@ public partial class Home(AgentCollection agentCollection)
                     }
                     else if (content is FunctionApprovalRequestContent request)
                     {
-                        // var input = userText.Trim().ToLowerInvariant();
-                        
-                        // var argsJson = JsonSerializer.Serialize(
-                        //     request.FunctionCall.Arguments,
-                        //     new JsonSerializerOptions { WriteIndented = true }
-                        // );
                         request.FunctionCall.Arguments!.TryGetValue("filename", out var filename);
                         request.FunctionCall.Arguments!.TryGetValue("content", out var generatedContent);
-                        var msg2 = $"**Please confirm that you'd like to create the text file with the following details:**\n\nFilename:{filename}\n\nContent:\n\n{generatedContent}\n\nReply **approve** to proceed or **deny** to reject.";
-                        Messages.Last().Text = msg2;
+                        var msg = $"**Please confirm that you'd like to create the text file with the following details:**\n\nFilename:{filename}\n\nContent:\n\n{generatedContent}";//\n\nReply **approve** to proceed or **deny** to reject.";
+                        Messages.Last().Text = msg;
+                        Messages.Last().IsApprovalRequest = true;
                         StateHasChanged();
                         awaitingApproval = true;
                         awaitingRequest = request;
@@ -91,6 +89,22 @@ public partial class Home(AgentCollection agentCollection)
     {
         return Markdown.ToHtml(markdown);
     }
+
+    private async Task HandleApproval(bool approved)
+    {
+        if (awaitingRequest == null)
+            return;
+
+        var approvalMessage = new ChatMessage(
+            ChatRole.User,
+            [awaitingRequest.CreateResponse(approved)]
+        );
+
+        awaitingApproval = false;
+
+        await HandleFunctionApprovalResponse(approvalMessage);
+    }
+
 
     async Task HandleFunctionApprovalResponse(ChatMessage message)
     {
