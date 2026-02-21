@@ -39,7 +39,10 @@
         <div class="input-bar">
             <input @bind="CurrentMessage"
                 @bind:event="oninput"
-                placeholder="Type a message..."
+                @onkeydown="HandleKeyDown"
+                placeholder="@(awaitingApproval 
+                ? "Please approve or deny the request above..." 
+                : "Type a message...")"
                 class="chat-input"
                 disabled="@awaitingApproval" />
             <input type="button" @onclick="SendMessage" value="Send" disabled="@awaitingApproval"/>

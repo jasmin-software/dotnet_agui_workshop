@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Markdig;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.AI;
 
 
@@ -72,7 +73,7 @@ public partial class Home(AgentCollection agentCollection)
                     {
                         request.FunctionCall.Arguments!.TryGetValue("filename", out var filename);
                         request.FunctionCall.Arguments!.TryGetValue("content", out var generatedContent);
-                        var msg = $"**Please confirm that you'd like to create the text file with the following details:**\n\nFilename:{filename}\n\nContent:\n\n{generatedContent}";//\n\nReply **approve** to proceed or **deny** to reject.";
+                        var msg = $"**Please confirm that you'd like to create the text file with the following details:**\n\nFilename:{filename}\n\nContent:\n\n{generatedContent}";
                         Messages.Last().Text = msg;
                         Messages.Last().IsApprovalRequest = true;
                         StateHasChanged();
@@ -89,6 +90,18 @@ public partial class Home(AgentCollection agentCollection)
     {
         return Markdown.ToHtml(markdown);
     }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" 
+            && !awaitingApproval 
+            && !string.IsNullOrWhiteSpace(CurrentMessage))
+        {
+            await SendMessage();
+        }
+    }
+
+
 
     private async Task HandleApproval(bool approved)
     {
