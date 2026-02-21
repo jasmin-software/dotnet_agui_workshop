@@ -40,8 +40,9 @@
             <input @bind="CurrentMessage"
                 @bind:event="oninput"
                 placeholder="Type a message..."
-                class="chat-input" />
-            <input type="button" @onclick="SendMessage" value="Send" />
+                class="chat-input"
+                disabled="@awaitingApproval" />
+            <input type="button" @onclick="SendMessage" value="Send" disabled="@awaitingApproval"/>
         </div>
     </div>
 </div>
