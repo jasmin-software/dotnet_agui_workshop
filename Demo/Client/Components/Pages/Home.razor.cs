@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text.Json;
 using BlazorBootstrap;
 using Markdig;
@@ -11,11 +12,11 @@ public partial class Home(AgentCollection agentCollection)
 {
     private string CurrentMessage = "";
     private static List<ToastMessage> toastMessages = new List<ToastMessage>();
-     private List<ChatText> Messages = new();
+     private List<ChatText> Messages = new ();
     public static string? Color { get; set; }
     private bool awaitingApproval = false;
     private FunctionApprovalRequestContent? awaitingRequest;
-    private static bool isVerbose = true;
+    private static bool isVerbose = false;
 
 
     public class ChatText
@@ -23,6 +24,32 @@ public partial class Home(AgentCollection agentCollection)
         public required string Text { get; set; }
         public bool IsUser { get; set; }
         public bool IsApprovalRequest { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+        Messages.Add(new ChatText
+            {
+                Text = @"
+### Welcome! 👋
+
+Here’s what you can try out with me, your AI assistant:
+
+1. **Change the Chat Background**
+   - You can modify the chat’s background color to whatever you like, e.g., red, the color of grass, or just describe your vibe!
+
+2. **Verbose Logging**
+   - Turn on the **verbose flag** to see which functions the agent is calling. Notice the toast notifications popping up!
+
+3. **Human-in-the-Loop file generation**
+   - Ask me to **create a text file**. You’ll get the **Approve/Deny buttons** to control whether it actually executes!
+
+---
+
+Give them a try. Feel free to experiment with combinations of these features!",
+                IsUser = false
+            });
     }
 
     private async Task SendMessage()
@@ -73,7 +100,8 @@ public partial class Home(AgentCollection agentCollection)
                         if (content is FunctionCallContent functionCallContent)
                         {
                             var args = string.Join("\n", functionCallContent.Arguments!.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
-                            var msg = $@"```
+                            var msg = 
+$@"```
 [{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [VERBOSE] Function call: {functionCallContent.Name}
 Arguments:
 {args}
@@ -84,7 +112,8 @@ Arguments:
                         }
                         else if (content is FunctionResultContent functionResultContent)
                         {
-                            var msg = $@"```
+                            var msg = 
+$@"```
 [{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [VERBOSE] Function result: {functionResultContent.Result}
 [END VERBOSE LOG]
 ```";
@@ -92,7 +121,6 @@ Arguments:
                             StateHasChanged();
                         }
                     }
-                    
                 }
             }
         }
