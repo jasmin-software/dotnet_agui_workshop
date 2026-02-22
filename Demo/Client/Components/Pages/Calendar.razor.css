@@ -1,0 +1,33 @@
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.calendar-table th {
+    background-color: rgb(5, 39, 103);
+    color: white;
+    padding: 5px;
+}
+
+.calendar-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    height: 60px;
+    vertical-align: top;
+}
+
+.calendar-table td.empty {
+    background-color: #f9f9f9;
+}
+
+.calendar-table td.day:hover {
+    background-color: #e3f2fd;
+    cursor: pointer;
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
