@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BlazorBootstrap;
 using Markdig;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.AI;
@@ -9,10 +10,13 @@ namespace Client.Components.Pages;
 public partial class Home(AgentCollection agentCollection)
 {
     private string CurrentMessage = "";
+    private static List<ToastMessage> toastMessages = new List<ToastMessage>();
      private List<ChatText> Messages = new();
     public static string? Color { get; set; }
     private bool awaitingApproval = false;
     private FunctionApprovalRequestContent? awaitingRequest;
+    private static bool isVerbose = true;
+
 
     public class ChatText
     {
@@ -35,22 +39,6 @@ public partial class Home(AgentCollection agentCollection)
 
             var userText = CurrentMessage;
             CurrentMessage = "";
-
-            if (awaitingApproval && awaitingRequest != null)
-            {
-                var input = userText.Trim().ToLowerInvariant();
-                if (input == "approve" || input == "a" || input == "yes" || input == "y")
-                {
-                    var approvalMessage = new ChatMessage(ChatRole.User, [awaitingRequest!.CreateResponse(true)]);
-                    await HandleFunctionApprovalResponse(approvalMessage);
-                }
-                else if (input == "deny" || input == "d" || input == "no" || input == "n")
-                {
-                    var denialMessage = new ChatMessage(ChatRole.User, [awaitingRequest!.CreateResponse(false)]);
-                    await HandleFunctionApprovalResponse(denialMessage);
-                }
-                return;
-            }
 
             Messages.Add(new ChatText
             {
@@ -80,15 +68,73 @@ public partial class Home(AgentCollection agentCollection)
                         awaitingApproval = true;
                         awaitingRequest = request;
                     }
+                    if (isVerbose)
+                    {
+                        if (content is FunctionCallContent functionCallContent)
+                        {
+                            var args = string.Join("\n", functionCallContent.Arguments!.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+                            var msg = $@"```
+[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [VERBOSE] Function call: {functionCallContent.Name}
+Arguments:
+{args}
+[END VERBOSE LOG]
+```";
+                            Messages.Last().Text += "\n\n" + msg + "\n\n";
+                            StateHasChanged();
+                        }
+                        else if (content is FunctionResultContent functionResultContent)
+                        {
+                            var msg = $@"```
+[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [VERBOSE] Function result: {functionResultContent.Result}
+[END VERBOSE LOG]
+```";
+                            Messages.Last().Text += "\n\n" + msg + "\n\n";
+                            StateHasChanged();
+                        }
+                    }
                     
                 }
             }
         }
     }
+    private const string VerboseAlreadyMessageTemplate = "Verbose logging is already {0}. No changes were made.";
+    private const string VerboseNowMessageTemplate = "Verbose logging is now {0}.";
+    public static void HandleVerboseToggle(bool isVerbose)
+    {
+        string status = isVerbose ? "enabled" : "disabled";
+        bool isNoChange = Home.isVerbose == isVerbose;
+        string template = isNoChange ? VerboseAlreadyMessageTemplate : VerboseNowMessageTemplate;
+        ToastType type = isNoChange ? ToastType.Warning : ToastType.Success;
+
+        if (!isNoChange)
+            Home.isVerbose = isVerbose;
+
+        ShowMessage(isVerbose, type, string.Format(template, status));
+    }
+
+
+    private static void ShowMessage(bool isVerbose, ToastType type, string message) => toastMessages.Add(CreateToastMessage(isVerbose, type, message));
+    
+    private static ToastMessage CreateToastMessage(bool isVerbose, ToastType type, string message)
+        => new ToastMessage
+        {
+            Type = type,
+            Title = type == ToastType.Warning 
+                ? "Verbose Logging is already " + (isVerbose ? "Enabled" : "Disabled")
+                : "Verbose Logging " + (isVerbose ? "Enabled" : "Disabled"),
+
+            HelpText = $"{DateTime.Now}",
+
+            Message = type == ToastType.Warning
+                ? string.Format(VerboseAlreadyMessageTemplate, message)
+            : string.Format(VerboseNowMessageTemplate, message),
+
+            AutoHide = true
+        };
 
     private string RenderMarkdown(string markdown)
     {
-        return Markdown.ToHtml(markdown);
+        return Markdig.Markdown.ToHtml(markdown);
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
@@ -100,8 +146,6 @@ public partial class Home(AgentCollection agentCollection)
             await SendMessage();
         }
     }
-
-
 
     private async Task HandleApproval(bool approved)
     {
@@ -117,7 +161,6 @@ public partial class Home(AgentCollection agentCollection)
 
         await HandleFunctionApprovalResponse(approvalMessage);
     }
-
 
     async Task HandleFunctionApprovalResponse(ChatMessage message)
     {

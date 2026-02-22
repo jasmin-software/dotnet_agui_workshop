@@ -12,14 +12,17 @@ string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "htt
 
 AIFunction setBackgroundColorTool = AIFunctionFactory.Create(UserInterfaceTool.ChangeBackgroundColor);
 AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(UserInterfaceTool.GenerateTextFile));
+AIFunction toggleVerboseTool = AIFunctionFactory.Create(UserInterfaceTool.ToggleVerbose);
 
 ChatClientAgent assistantAgent = new AGUIChatClient(httpClient, $"{serverUrl}/assistant").CreateAIAgent(
-    tools: [setBackgroundColorTool, approvalRequiredGenerateTextFileTool]);
+    tools: [setBackgroundColorTool, approvalRequiredGenerateTextFileTool, toggleVerboseTool]);
 ChatClientAgent representativeAgent = new AGUIChatClient(httpClient, $"{serverUrl}/rep").CreateAIAgent();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddSingleton(new AgentCollection(assistantAgent, representativeAgent));
 

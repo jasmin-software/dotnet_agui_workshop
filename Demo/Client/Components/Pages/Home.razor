@@ -1,6 +1,9 @@
 ﻿@page "/"
 @namespace Client.Components.Pages
 @rendermode InteractiveServer
+@using BlazorBootstrap
+
+<Toasts class="p-3" Messages="toastMessages" Placement="ToastsPlacement.BottomLeft" />
 
 <div style="background-color: @(Color ?? "white")">
     <div class="chat-container">
