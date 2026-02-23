@@ -12,7 +12,7 @@ Visit GitHub at <a target="_blank" href="https://github.com/marketplace?type=mod
 ### Select Model
 Click on the `Most Popular` tab.
 
-We will be using the `gpt-4o-mini` model. Scroll down until you find `OpenAO GPT-4o mini`.
+We will be using the `gpt-4o-mini` model. Scroll down until you find `OpenAI GPT-4o mini`.
 
 ![gpt 4o-mini model](./assets/gpt-4o-mini-model.png)
 
