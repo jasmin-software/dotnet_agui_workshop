@@ -92,9 +92,9 @@ catch (Exception ex)
 ### Running the client
 
 > [!IMPORTANT]
-> Before running the client, ensure the the server is running at `http://localhost:5000`.
+> Before running the client, ensure the server is running at `http://localhost:5000`.
 >
-> You can do this by running this in the `Server` folder:
+> Do this by running the following in the `Server` folder:
 > ```
 > dotnet run --urls http://localhost:5000
 > ```
