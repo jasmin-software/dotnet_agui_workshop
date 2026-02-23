@@ -4,7 +4,7 @@ The AG-UI client connects to the server and display streaming responses.
 
 ### Creating the client
 
-Inside the AGUI folder, create a console project:
+Inside the `AGUI` folder, create a console project:
 ``` bash
 dotnet new console -o Client
 dotnet sln add ./Client/Client.csproj
