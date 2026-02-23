@@ -82,7 +82,7 @@ string? endpoint = builder.Configuration["GitHub:ApiEndpoint"] ?? "https://model
 string? deploymentName = builder.Configuration["GitHub:Model"] ?? "openai/gpt-4o-mini";
 ```
 
-Right after reading the environment variable, add the following code that registers our weather tool and creates an agent named _Socrates_ who is a wise motivational assistant:
+Right after reading the environment variables, add the following code that registers our weather tool and creates an agent named _Socrates_ who is a wise motivational assistant:
 
 ```C#
 // Create backend tool
