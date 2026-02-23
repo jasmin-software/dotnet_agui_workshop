@@ -5,7 +5,7 @@ We will be building a **console app** with a client-server architecture.
 The AG-UI server hosts your AI agent and a backend tool that fetches weather. The client lets you interact with the agent, change console text color, and approve actions like creating a text file. 
 
 > [!TIP] 
-> Want a sneak peek?
+> **Want a sneak peek?**
 > 
 > The `Demo` folder contains the completed version of the console app. 
 > 
