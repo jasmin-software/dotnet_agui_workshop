@@ -32,7 +32,7 @@ cd ..
 
 **Server Code**
 
-Add the following JSON to _appsettings.Development.json_ file:
+Add the following JSON to `appsettings.Development.json` file:
 
 ```json
 "GitHub": {
