@@ -19,7 +19,7 @@ dotnet add package Microsoft.Agents.AI --version 1.0.0-preview.260128.1
 cd ..
 ```
 
-Replaced `Program.cs` with this:
+Replace `Program.cs` with this:
 ``` C#
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
