@@ -44,9 +44,9 @@ Add the following JSON to _appsettings.Development.json_ file:
 
 > [!NOTE]
 >
-> Replace _put-your-github-personal-access-token-here_ with your GitHub Personal Access Token. 
+> Replace `put-your-github-personal-access-token-here` with your GitHub Personal Access Token. 
 
-Edit the _.gitignore_ file in the _AGUI_ folder and add to it _appsettings.Development.json_ so that your secrets do not find their way into source control by mistake.
+Edit the `.gitignore` file in the `AGUI` folder and add to it `appsettings.Development.json` so that your secrets do not find their way into source control by mistake.
 
 We will add a simple weather tool that returns a static weather report. Of course, you can replace the tool with one that connects to a weather API and returns real weather related forecast data. 
 
