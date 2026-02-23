@@ -1,8 +1,0 @@
-<Solution>
-  <Project Path="AgUiAspire.AppHost/AgUiAspire.AppHost.csproj" />
-  <Project Path="AgUiAspire.ServiceDefaults/AgUiAspire.ServiceDefaults.csproj" />
-  <Project Path="Blazor_Client/Blazor_Client.csproj" />
-  <Project Path="CLI_Client/CLI_Client.csproj" />
-  <Project Path="CLI_Human_in_the_Loop_Client/CLI_Human_in_the_Loop_Client.csproj" />
-  <Project Path="Server/Server.csproj" />
-</Solution>
