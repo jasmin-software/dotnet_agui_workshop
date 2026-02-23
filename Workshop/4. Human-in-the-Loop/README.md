@@ -44,7 +44,7 @@ AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction
 
 Then, add the tool to the agent:
 ``` C#
-AIAgent agent = chatClient.CreateAIAgent(
+AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
     tools: [setTextColorTool, 
