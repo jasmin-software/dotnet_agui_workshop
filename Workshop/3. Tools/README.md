@@ -10,7 +10,7 @@ Tools are split into **backend tools** and **frontend tools**, depending on wher
 
 Backend tools are defined and executed on the **server**.
 
-The agent decides when to call these tools, and their results are executed on the server and the results are automatically streamed back to the client. Backend tools are ideal for data access, server-side logic, and interacting with external systems.
+The agent decides when to call these tools, executes them on the server and the results are automatically streamed back to the client. Backend tools are ideal for data access, server-side logic, and interacting with external systems.
 
 ### Creating a backend tool:
 
