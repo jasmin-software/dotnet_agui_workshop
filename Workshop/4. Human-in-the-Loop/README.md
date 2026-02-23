@@ -13,7 +13,7 @@ When approval is required, the agent run stops and returns a response indicating
 >
 > `FunctionApprovalRequestContent` and `ApprovalRequiredAIFunction` are for evaluation and may change or be removed in future updates. They will be highlighted with a warning (similar to a syntax error) in your editor. 
 >
-> To ignore this warning, create an `.editorconfig` file in the project root folder with the following content: 
+> To ignore this warning, create an `.editorconfig` file in the `AGUI` folder with the following content: 
 >
 > ```
 > [*.cs]
