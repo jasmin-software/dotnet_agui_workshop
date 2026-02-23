@@ -5,7 +5,7 @@ You will need to use an AI Model in order to build the AG-UI server. In today's 
 Follow these instructions to get a GitHub Personal Access Token (PAT).
 
 ### Starting Point
-Visit GitHub at https://github.com/marketplace?type=models to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
+Visit GitHub at <a target="_blank" href="https://github.com/marketplace?type=models">https://github.com/marketplace?type=models</a> to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
 
 ![Most Popular](./assets/most-popular.png)
 
