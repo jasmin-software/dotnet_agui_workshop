@@ -1,8 +1,15 @@
-# Workshop
+# Agent-User Interaction (AGUI) Workshop
 
-We will be building a console app with a client-server architecture. 
+We will be building a console app with a client-server architecture.
 
 The AG-UI server hosts your AI agent and a backend tool that fetches weather. The client lets you interact with the agent, change console text color, and approve actions like creating a text file. 
+
+> [!TIP] 
+> Want a sneak peek?
+> 
+> The `Demo` folder contains the completed version of the console app. 
+> 
+> Feel free to explore it first, or use it as a guide as we build everything from scratch together!
 
 ## [0. GitHub Token](0.%20GitHub%20Token/README.md)
 
