@@ -7,16 +7,25 @@
 
 ## Overview
 
-We will be building a **console app** with a client-server architecture.
+**Build an AI agent console app using AG-UI.**
 
-The AG-UI server hosts your AI agent and a backend tool that fetches weather. The client lets you interact with the agent, change console text color, and approve actions like creating a text file. 
+In this workshop, you'll build a console-based client-server application featuring streaming UI, tool calling, and human-in-the-loop workflows.
+
+### Goal
+By the end of this workshop, you will have a working console app with:
+- An AI agent hosted on an AG-UI server
+- A client that streams responses in real time
+- Backend and frontend tools
+- A human-in-the-loop approval workflow
+
+**Each section builds on the previous one. Follow them in order.**
 
 > [!TIP] 
 > **Want a sneak peek?**
 > 
-> The `Demo` folder contains the completed version of the console app. 
+> The `Reference Implementation` folder contains the completed version of the console app.
 > 
-> Feel free to explore it first, or use it as a guide as we build everything from scratch together!
+> Explore it for context, or use it as a guide as we build everything step by step
 
 ## [0. GitHub Token](0.%20GitHub%20Token/README.md)
 
