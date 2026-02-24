@@ -47,6 +47,8 @@ dotnet run
 
 The client will connect to the running server and allow you to interact with the agent.
 
-## Architecture overview
+Now, ask the agent anything!
+
+## What's happening?
 
 See explanation [here](../2.%20Client%20Setup/README.md#whats-happening).
