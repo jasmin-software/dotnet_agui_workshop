@@ -3,9 +3,10 @@
 
 This project contains a **Server** and a **Client**.
 
-You'll need a **GitHub Personal Access Token** (PAT) to run this application.
-
-If you don't have one yet, go to [0. GitHub Token](../0.%20GitHub%20Token/README.md) to create it.
+> [!NOTE]
+> You'll need a **GitHub Personal Access Token** (PAT) to run this application.
+>
+> If you don't have one yet, go to [0. GitHub Token](../0.%20GitHub%20Token/README.md) to create it.
 
 ## Server
 
