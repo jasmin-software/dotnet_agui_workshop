@@ -99,7 +99,7 @@ catch (Exception ex)
 > ```bash
 > dotnet run --urls http://localhost:5000
 > ```
-> Keep this terminal open.
+> **Keep this terminal open.**
 
 In a new terminal, from the `Client` folder:
 ```bash
