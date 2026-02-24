@@ -2,7 +2,7 @@
 
 The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP.NET Core.
 
-### Creating the server
+## Create the server
 
 From a working directory inside of a terminal window, create a web app named _Server_ with the following command:
 
@@ -114,9 +114,12 @@ app.MapAGUI("/", agent);
 
 This is it, folks. We now have an AG-UI server that we will later connect to from a variety of clients.
 
-### Running the server
+## Start the server
 
-To start the server, run this in the `Server` folder:
-```
+From the `Server` folder:
+```bash
 dotnet run --urls http://localhost:5000
 ```
+You should see the server running on http://localhost:5000. 
+
+Keep this terminal open.

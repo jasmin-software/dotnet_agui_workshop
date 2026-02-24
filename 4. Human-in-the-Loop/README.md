@@ -7,7 +7,7 @@ This pattern, known as **human-in-the-loop**, is used whenever an agent needs us
 When approval is required, the agent run stops and returns a response indicating what input is required. The client is responsible for collecting that input from the user and resuming the agent run with the user’s response.
 
 
-### Creating a tool with human-in-the-loop approval
+## Create a tool with human-in-the-loop approval
 
 > [!TIP]
 >
@@ -22,7 +22,7 @@ When approval is required, the agent run stops and returns a response indicating
 > ```
 
 Add this tool to generate a text file to `Program.cs` in the `Client` folder:
-``` C#
+```C#
 [Description("Generate a text file with the specified filename and content.")]
 string GenerateTextFile(
     [Description("The filename to generate")] string filename,
@@ -38,12 +38,12 @@ string GenerateTextFile(
 ```
 
 Make it an `AIFunction` that requires approval by wrapping it around `ApprovalRequiredAIFunction` somewhere before the agent is declared:
-``` C#
+```C#
 AIFunction approvalRequiredGenerateTextFileTool = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(GenerateTextFile));
 ```
 
 Then, add the tool to the agent:
-``` C#
+```C#
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
@@ -52,7 +52,7 @@ AIAgent agent = chatClient.AsAIAgent(
 ```
 
 Create a helper method that handles the approval response:
-``` c#
+```C#
 async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 {
     await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(message))
@@ -64,7 +64,7 @@ async Task HandleFunctionApprovalResponse(AIAgent agent, ChatMessage message)
 ```
 
 Add this `else-if` condition to the `AIContent` foreach loop to take care of the function approval:
-``` C#
+```C#
                 else if (content is FunctionApprovalRequestContent request)
                 {
                     var input = message.Trim().ToLowerInvariant();
@@ -96,23 +96,23 @@ Add this `else-if` condition to the `AIContent` foreach loop to take care of the
                 }
 ```
 
-### Using the tool with human-in-the-loop approval:
+## Invoke the tool with human-in-the-loop approval:
 
 > [!IMPORTANT]
 > Before running the client, ensure the server is running at `http://localhost:5000`.
 >
-> You can do this by running this in the `Server` folder:
-> ```
+> From the `Server` folder:
+> ```bash
 > dotnet run --urls http://localhost:5000
 > ```
+> Keep this terminal open.
 
-Quit and start the client again.
-> To quit, type `:q` in the console.
-> 
-> Then, run this in the `Client` folder to start it again:
-> ``` bash
-> dotnet run
-> ```
+If your console app is still running from before, quit it by typing `:q`. 
+
+Then, from the same `Client` folder:
+```bash
+dotnet run
+```
 
 Now, ask the agent to **create a text file**.
 
@@ -127,7 +127,7 @@ Here's an example of the interaction:
 </details>
 
 
-### What's happening?
+## What's happening?
 
 ```mermaid
 sequenceDiagram;

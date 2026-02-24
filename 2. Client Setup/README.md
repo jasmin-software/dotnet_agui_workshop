@@ -2,17 +2,17 @@
 
 The AG-UI client connects to the server and display streaming responses.
 
-### Creating the client
+## Create the client
 
 Inside the `AGUI` folder, create a console project:
-``` bash
+```bash
 dotnet new console -o Client
 dotnet sln add ./Client/Client.csproj
 ```
 
 Install the required packages for the client:
 
-``` bash
+```bash
 cd Client
 dotnet add package Microsoft.Agents.AI.AGUI --version 1.0.0-preview.260128.1
 dotnet add package Microsoft.Agents.AI --version 1.0.0-preview.260128.1
@@ -20,7 +20,7 @@ cd ..
 ```
 
 Replace `Program.cs` with this:
-``` C#
+```C#
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.AGUI;
 using Microsoft.Extensions.AI;
@@ -90,21 +90,21 @@ catch (Exception ex)
 }
 ```
 
-### Running the client
+## Run the client
 
 > [!IMPORTANT]
 > Before running the client, ensure the server is running at `http://localhost:5000`.
 >
-> Do this by running the following in the `Server` folder:
-> ```
+> From the `Server` folder:
+> ```bash
 > dotnet run --urls http://localhost:5000
 > ```
+> Keep this terminal open.
 
-Start the client.
-> Run this in the `Client` folder to start it:
-> ``` bash
-> dotnet run
-> ```
+In a new terminal, from the `Client` folder:
+```bash
+dotnet run
+```
 
 And, ask the agent anything!
 
@@ -120,7 +120,7 @@ Here's an example of the interaction:
 
 </details>
 
-### What's happening?
+## What's happening?
 
 ```mermaid
 sequenceDiagram;

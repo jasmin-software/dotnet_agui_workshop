@@ -12,12 +12,12 @@ Backend tools are defined and executed on the **server**.
 
 The agent decides when to call these tools, executes them on the server and the results are automatically streamed back to the client. Backend tools are ideal for data access, server-side logic, and interacting with external systems.
 
-### Creating a backend tool:
+### Create a backend tool:
 
 There's already a backend tool, i.e., `WeatherBackendTool.GetWeather`, defined on the server.
 
 
-### Using the backend tool:
+### Invoke the backend tool:
 
 In the same console, ask the agent for **the weather in any city**.
 
@@ -58,10 +58,10 @@ Frontend tools are defined and executed on the **client**.
 
 The agent decides when to call these tools, but their execution happens entirely on the client. Frontend tools are ideal for UI operations, client-specific data, and interactions with the local system.
 
-### Creating a frontend tool
+### Create a frontend tool
 
 Add this tool to change the console text color to `Program.cs` in the `Client` folder:
-``` C#
+```C#
 [Description("Change the console text color into the specified color.")]
 string SetTextColor(string color)
 {
@@ -79,12 +79,12 @@ string SetTextColor(string color)
 ```
 
 Make it an `AIFunction` somewhere before the agent is declared::
-``` C#
+```C#
 AIFunction setTextColorTool = AIFunctionFactory.Create(SetTextColor);
 ```
 
 Then, <a name="client-registration">add the tool to the agent</a>:
-``` C#
+```C#
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
@@ -92,7 +92,7 @@ AIAgent agent = chatClient.AsAIAgent(
 ```
 
 Add instruction for the agent when using the client tool:
-``` C#
+```C#
 List<ChatMessage> messages =
 [
     new(ChatRole.System, "When asked to return a color for the console foreground, choose the closest one from the ConsoleColor enum and return with CamelCase."),
@@ -100,7 +100,7 @@ List<ChatMessage> messages =
 ```
 
 Add these two else-if conditions to the `AIContent` foreach loop so you can see when the function is called, what arguments are passed in, and what result the function returns:
-``` C#
+```C#
                 else if (content is FunctionCallContent functionCallContent)
                 {                    
                     var argsJson = JsonSerializer.Serialize(
@@ -118,23 +118,23 @@ Add these two else-if conditions to the `AIContent` foreach loop so you can see 
                     Console.ForegroundColor = currentTextColor;
                 }
 ```
-### Using the frontend tool
+### Invoke the frontend tool
 
 > [!IMPORTANT]
 > Before running the client, ensure the server is running at `http://localhost:5000`.
 >
-> You can do this by running this in the `Server` folder:
-> ```
+> From the `Server` folder:
+> ```bash
 > dotnet run --urls http://localhost:5000
 > ```
+> Keep this terminal open.
 
-Quit and start the client again.
-> To quit, type `:q` in the console.
-> 
-> Then, run this in the `Client` folder to start it again:
-> ``` bash
-> dotnet run
-> ```
+If your console app is still running from before, quit it by typing `:q`. 
+
+Then, from the same `Client` folder:
+```bash
+dotnet run
+```
 
 Now, ask the agent to **change the console text color**.
 

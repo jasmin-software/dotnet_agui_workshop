@@ -32,7 +32,9 @@ From the `Server` folder:
 dotnet run --urls http://localhost:5000
 ```
 
-You should see the server running on `http://localhost:5000`. Keep this terminal open.
+You should see the server running on `http://localhost:5000`. 
+
+Keep this terminal open.
 
 ## Client
 
