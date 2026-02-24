@@ -16,6 +16,7 @@ using HttpClient httpClient = new()
 };
 
 AGUIChatClient chatClient = new(httpClient, serverUrl);
+
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
     description: "AG-UI Client Agent",
