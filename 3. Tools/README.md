@@ -121,13 +121,13 @@ Add these two else-if conditions to the `AIContent` foreach loop so you can see 
 ### Invoke the frontend tool
 
 > [!IMPORTANT]
-> Before running the client, ensure the server is running at `http://localhost:5000`.
+> Before running the client, ensure the server is still running at `http://localhost:5000`.
 >
-> From the `Server` folder:
+> If not, from the `Server` folder:
 > ```bash
 > dotnet run --urls http://localhost:5000
 > ```
-> Keep this terminal open.
+> **Keep this terminal open.**
 
 If your console app is still running from before, quit it by typing `:q`. 
 

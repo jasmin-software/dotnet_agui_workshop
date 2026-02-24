@@ -93,9 +93,9 @@ catch (Exception ex)
 ## Run the client
 
 > [!IMPORTANT]
-> Before running the client, ensure the server is running at `http://localhost:5000`.
+> Before running the client, ensure the server is still running at `http://localhost:5000`.
 >
-> From the `Server` folder:
+> If not, from the `Server` folder:
 > ```bash
 > dotnet run --urls http://localhost:5000
 > ```
