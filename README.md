@@ -25,7 +25,7 @@ By the end of this workshop, you will have a working console app with:
 > 
 > The `Reference Implementation` folder contains the completed version of the console app.
 > 
-> Explore it for context, or use it as a guide as we build everything step by step
+> Explore it for context, or use it as a guide as we build everything step by step.
 
 ## [0. GitHub Token](0.%20GitHub%20Token/README.md)
 
