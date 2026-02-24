@@ -5,12 +5,13 @@ You will need to use an AI Model in order to build the AG-UI server. In today's 
 Follow these instructions to get a GitHub Personal Access Token (PAT).
 
 ## Starting Point
-Visit GitHub at <a target="_blank" href="https://github.com/marketplace?type=models">https://github.com/marketplace?type=models</a> to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
+Go to [GitHub Models](https://github.com/marketplace?type=models) to work with free GitHub AI Models. At the time of writing, these are a subset of the models available:
+
+Click on the `Most Popular` tab.
 
 ![Most Popular](./assets/most-popular.png)
 
 ## Select Model
-Click on the `Most Popular` tab.
 
 We will be using the `gpt-4o-mini` model. Scroll down until you find `OpenAI GPT-4o mini`.
 
@@ -22,40 +23,44 @@ Selecting the `OpenAI GPT-4o mini` leads you to the page below.
 
 Click on the `<> Use this model` button.
 
+
+
+
+## Find Model Signature
+
+Once the dialog pops up, select `C#`, then click on `3. Run a basic code sample`.
+
 ![Select C#](./assets/c-sharp.png)
 
-## Select Language
-Once the dialog pops up, select `C#`, then click on `3. Run a basic code sample`.
+You will find the signature of the model here. In our case it is `openai/gpt-4o-mini`.
 
 ![model signature](./assets/model-signature.png)
 
-## Find Model Signature
-On the next dialog, you will see the signature of the model. In our case it is `openai/gpt-4o-mini`.
+## Create Personal Access Token
+
+Click on `1. Configure authentication`.
 
 ![configure authentication](./assets/configure-auth.png)
 
-## Configure authentication
-Click on `1. Configure authentication`.
+Next, click on the green `Create Personal Access Token` button.
 
 ![create personal access token](./assets/create-pat.png)
 
-## Create Personal Access Token
-Next, click on the green `Create Personal Access Token` button.
+You may need to go through a verification process.
 
 ![verification](./assets/verification.png)
 
-You may need to go through a verification process.
-
-![generate token](./assets/generate-token.png)
+## Generate the token
 
 Make selections, then click on `Generate token`.
 
-![confirm](./assets/confirm.png)
+![generate token](./assets/generate-token.png)
 
-## Generate token
 On the next pop-up, click on `Generate token` to confirm.
 
-![copy token](./assets/copy-token.png)
+![confirm](./assets/confirm.png)
 
-## Save token
+## Save the token
 Copy the newly generated token and place it is a safe place because you cannot view this token again once you leave this page. 
+
+![copy token](./assets/copy-token.png)
