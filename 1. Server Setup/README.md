@@ -4,7 +4,7 @@ The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP
 
 ## Create the server
 
-From a working directory inside of a terminal window, create a web app named _Server_ with the following command:
+From a working directory inside of a terminal window, create a web app named `Server` with the following command:
 
 ```bash
 mkdir AGUI
