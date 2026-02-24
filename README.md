@@ -5,7 +5,7 @@
 - [AG-UI Blazor app](https://github.com/jasmin-software/dotnet_agui_blazor_demo)
 - [Workshop slides](./Slides.pdf)
 
-## Workshop Overview
+## Overview
 
 We will be building a **console app** with a client-server architecture.
 
