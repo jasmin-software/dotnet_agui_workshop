@@ -1,4 +1,4 @@
-# Build your own AI Agent with Microsoft Agent Framework & AG-UI
+# Build your own AI Agent
 
 ## Looking for something specific? 
 
