@@ -1,4 +1,4 @@
-# Tools
+# 3. Tools
 
 This tutorial shows you how to add **function tools** to your AG-UI agents. 
 

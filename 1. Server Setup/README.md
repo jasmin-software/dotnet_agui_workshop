@@ -1,4 +1,4 @@
-# Server Setup
+# 1. Server Setup
 
 The AG-UI server hosts your AI agent and exposes it via HTTP endpoints using ASP.NET Core.
 

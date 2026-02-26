@@ -1,4 +1,4 @@
-# Client Setup
+# 2. Client Setup
 
 The AG-UI client connects to the server and display streaming responses.
 

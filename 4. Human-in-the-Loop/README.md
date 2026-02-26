@@ -1,4 +1,4 @@
-# Human-in-the-Loop
+# 4. Human-in-the-Loop
 
 This tutorial shows you how to add  **function tools that require human approval** to your AG-UI agents. 
 
