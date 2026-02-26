@@ -178,3 +178,5 @@ When you send a message to change the console text color:
 > 1. Tool names and description ([here](#client-registration))
 > 2. Parameters schemas
 > 3. When to request tool execution
+
+Now, you can head on over to the next step: [4. Human-in-the-Loop](../4.%20Human-in-the-Loop/README.md)
