@@ -123,3 +123,5 @@ dotnet run --urls http://localhost:5000
 You should see the server running on http://localhost:5000. 
 
 **Keep this terminal open.**
+
+Now, you can head on over to the next step: [2. Client Setup](../2.%20Client%20Setup/README.md)

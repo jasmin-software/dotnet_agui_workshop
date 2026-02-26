@@ -136,3 +136,5 @@ When you send a message in the console:
 1. The client sends the request to the server via HTTP (`RunStreamingAsync`).
 2. The server streams the agent response back to the client via SSE.
 3. The client displays the message to you.
+
+Now, you can head on over to the next step: [3. Tools](../3.%20Tools/README.md)
