@@ -1,4 +1,4 @@
-# Get Personal Access Token from GitHub
+# GitHub Personal Access Token (PAT)
 
 You will need to use an AI Model in order to build the AG-UI server. In today's workshop, we will be using a AI Model hosted at GitHub, which is free for developers. 
 
