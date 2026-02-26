@@ -2,7 +2,6 @@
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +38,7 @@ AIAgent agent = new OpenAIClient(
         Endpoint = new Uri(endpoint)
     })
     .GetChatClient(deploymentName)
-    .CreateAIAgent(
+    .AsAIAgent(
         instructions: "You're a wise motivational assistant.",
         name: "Socrates",
         tools: tools);
@@ -51,18 +50,7 @@ ChatClient chatClient = new OpenAIClient(
         Endpoint = new Uri(endpoint)
     }).GetChatClient(deploymentName);
 
-AIAgent agent2 = chatClient.AsAIAgent(new ChatClientAgentOptions()
-{
-    ChatOptions = new() { Instructions = "You are a friendly assistant. Always address the user by their name." },
-    AIContextProviderFactory = (ctx, ct) => new ValueTask<AIContextProvider>(
-        new UserInfoMemory(
-            chatClient.AsIChatClient(),
-            ctx.SerializedState,
-            ctx.JsonSerializerOptions))
-});
-
-
 // Map the AG-UI agent endpoint
-app.MapAGUI("/", agent2);
+app.MapAGUI("/", agent);
 
 await app.RunAsync();
